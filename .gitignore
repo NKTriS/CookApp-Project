@@ -1,0 +1,74 @@
+# ══════════════════════════════════════════════
+# Android Build Artifacts
+# ══════════════════════════════════════════════
+*.iml
+.gradle/
+/build/
+/app/build/
+/captures
+.externalNativeBuild
+.cxx
+.DS_Store
+.kotlin/
+
+# Android Studio / IntelliJ
+/.idea/caches/
+/.idea/libraries/
+/.idea/modules.xml
+/.idea/workspace.xml
+/.idea/navEditor.xml
+/.idea/assetWizardSettings.xml
+
+# Local config (contains SDK path)
+local.properties
+
+# ══════════════════════════════════════════════
+# Node.js Backend
+# ══════════════════════════════════════════════
+CookAppBackend/node_modules/
+CookAppBackend/*.log
+
+# ── Sensitive: API keys, secrets, database ──
+CookAppBackend/.env
+CookAppBackend/database.sqlite
+
+# ══════════════════════════════════════════════
+# Log & Debug files
+# ══════════════════════════════════════════════
+*.log
+build*.txt
+build_*.txt
+err*.txt
+logcat.txt
+compile_output.txt
+ffmpeg_path.txt
+
+# ══════════════════════════════════════════════
+# One-off helper/test scripts (not part of app)
+# ══════════════════════════════════════════════
+download_*.py
+fetch_*.py
+patch_*.py
+test_*.py
+read_docx.py
+extract_docx.py
+update_java_maps.py
+replace_icons.py
+
+test_hash.js
+test_qs.js
+
+CookAppBackend/test_*.js
+CookAppBackend/check_*.js
+CookAppBackend/update_*.js
+CookAppBackend/dummy.txt
+CookAppBackend/backup_*.json
+CookAppBackend/faststart.ps1
+CookAppBackend/routes/api.js.deprecated
+
+# Root-level duplicate database
+database.sqlite
+cookapp.db
+
+# Ignore large video files
+*.mp4
