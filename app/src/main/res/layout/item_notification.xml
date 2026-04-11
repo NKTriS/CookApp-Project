@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_container"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="16dp">
+
+        <!-- Icon Badge -->
+        <FrameLayout
+            android:id="@+id/fl_icon_bg"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="2dp"
+            android:background="@drawable/bg_circle_translucent">
+
+            <TextView
+                android:id="@+id/tv_icon_emoji"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="🔔"
+                android:textSize="18sp" />
+        </FrameLayout>
+
+        <!-- Content -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_message"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Thông báo content..."
+                android:textColor="#1C1B1F"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tv_time"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:text="1 ngày trước"
+                android:textColor="#0090FF"
+                android:textSize="10sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- Unread Dot -->
+        <View
+            android:id="@+id/v_unread_dot"
+            android:layout_width="8dp"
+            android:layout_height="8dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="6dp"
+            android:background="@drawable/bg_circle_translucent"
+            android:backgroundTint="#2AD2C1" />
+
+    </LinearLayout>
+
+    <!-- Divider -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginHorizontal="12dp"
+        android:background="#D9D9D9" />
+
+</LinearLayout>

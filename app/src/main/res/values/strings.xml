@@ -1,0 +1,21 @@
+<resources>
+    <string name="app_name">Cookapp</string>
+    <string name="search_hint">Tìm kiếm công thức...</string>
+    <string name="hello_user">Chào đầu bếp!</string>
+    <string name="find_best_recipes">Tìm công thức nấu ăn ngon nhất</string>
+    <string name="popular_recipes">Công thức phổ biến</string>
+    <string name="see_all">Xem tất cả</string>
+    <string name="category_all">Tất cả</string>
+    <string name="category_breakfast">Ăn sáng</string>
+    <string name="category_lunch">Ăn trưa</string>
+    <string name="category_dinner">Ăn tối</string>
+    <string name="today_cooking">Hôm nay nấu gì? 👨‍🍳</string>
+    <string name="explore_recipes">Khám phá hơn 1000+ công thức ngon</string>
+    
+    <!-- New Strings -->
+    <string name="search_ingredient_hint">Bạn đang có nguyên liệu gì?</string>
+    <string name="recipe_list_title">Danh sách công thức</string>
+    <string name="difficulty_label">Độ khó</string>
+    <string name="difficulty_easy">Dễ</string>
+    <string name="recipe_detail_title">Thịt kho tàu</string>
+</resources>

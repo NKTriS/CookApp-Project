@@ -1,0 +1,138 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="16dp"
+    app:cardCornerRadius="28dp"
+    app:cardElevation="0dp"
+    app:cardBackgroundColor="#99D9D9D9">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Ảnh món ăn -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="match_parent"
+            android:layout_height="190dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            app:cardCornerRadius="24dp"
+            app:cardElevation="0dp">
+
+            <ImageView
+                android:id="@+id/iv_recipe"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:src="@drawable/img_category3" />
+        </androidx.cardview.widget.CardView>
+
+        <!-- Thông tin bên dưới ảnh -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingStart="12dp"
+            android:paddingTop="8dp"
+            android:paddingEnd="12dp"
+            android:paddingBottom="12dp">
+
+            <!-- Tên món ăn -->
+            <TextView
+                android:id="@+id/tv_recipe_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Thịt kho tàu"
+                android:textColor="#000000"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:maxLines="2"
+                android:ellipsize="end" />
+
+            <!-- AI Match Percentage (ẩn mặc định, chỉ hiện cho Smart Fridge) -->
+            <TextView
+                android:id="@+id/tv_match_percentage"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="✨ Phù hợp 80%"
+                android:textColor="#388E3C"
+                android:textSize="13sp"
+                android:textStyle="bold"
+                android:layout_marginTop="4dp"
+                android:visibility="gone" />
+
+            <!-- Danh mục + Độ khó (hàng 2) -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="4dp"
+                android:gravity="center_vertical">
+
+                <TextView
+                    android:id="@+id/tv_category"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Gia đình"
+                    android:textColor="#BF6A02"
+                    android:textSize="12sp"
+                    android:textStyle="bold"
+                    android:background="@drawable/bg_pill_grey"
+                    android:paddingStart="8dp"
+                    android:paddingEnd="8dp"
+                    android:paddingTop="2dp"
+                    android:paddingBottom="2dp" />
+
+                <TextView
+                    android:id="@+id/tv_difficulty"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Dễ"
+                    android:textColor="#555555"
+                    android:textSize="12sp"
+                    android:layout_marginStart="8dp" />
+            </LinearLayout>
+
+            <!-- Calories + Cook time (hàng 3) -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <!-- Calories -->
+                <TextView
+                    android:id="@+id/tv_calories"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="450 kcal"
+                    android:textColor="#000000"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <!-- Spacer -->
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1" />
+
+                <!-- Thời gian -->
+                <TextView
+                    android:id="@+id/tv_recipe_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="⏱ 30 phút"
+                    android:textColor="#000000"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

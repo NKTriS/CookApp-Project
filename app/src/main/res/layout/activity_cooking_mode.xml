@@ -1,0 +1,271 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#F9FAFB"
+    tools:context=".CookingModeActivity">
+
+    <!-- ══════════════════════ HEADER ══════════════════════ -->
+    <LinearLayout
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#FFFFFF"
+        android:elevation="4dp"
+        android:paddingStart="16dp"
+        android:paddingTop="36dp"
+        android:paddingEnd="16dp"
+        android:paddingBottom="16dp"
+        android:orientation="vertical"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            
+            <ImageView
+                android:id="@+id/iv_back"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_alignParentStart="true"
+                android:layout_centerVertical="true"
+                android:padding="6dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:src="@drawable/ic_back_arrow"
+                app:tint="#1F2937" />
+                
+            <TextView
+                android:id="@+id/tv_step_indicator"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="Bước 1/5"
+                android:textColor="#111827"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+                
+        </RelativeLayout>
+
+        <!-- Navigation Row -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <!-- Trước pill -->
+            <TextView
+                android:id="@+id/btn_prev"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="48dp"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/bg_pill_outline"
+                android:gravity="center"
+                android:text="Trước"
+                android:textColor="#374151"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:visibility="gone" />
+
+            <!-- Sau pill -->
+            <TextView
+                android:id="@+id/btn_next"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_height="48dp"
+                android:layout_marginStart="8dp"
+                android:background="@drawable/bg_pill_bf6a02"
+                android:gravity="center"
+                android:text="Tiếp theo"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- ══════════════════════ SCROLL CONTENT ══════════════════════ -->
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/content_scroll_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintTop_toBottomOf="@id/header"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <LinearLayout
+            android:id="@+id/content_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="40dp">
+
+            <!-- ── Step Image/Video Card ── -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cv_video_container"
+                android:layout_width="match_parent"
+                android:layout_height="240dp"
+                android:layout_margin="16dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="8dp">
+
+                <FrameLayout
+                    android:id="@+id/fl_video_frame"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="#000000">
+
+                    <androidx.media3.ui.PlayerView
+                        android:id="@+id/player_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        app:use_controller="true"
+                        app:show_buffering="always"
+                        android:visibility="gone" />
+
+                    <ImageView
+                        android:id="@+id/iv_step_image"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/img_category3" />
+                </FrameLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- ── Instruction block ── -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="8dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="2dp">
+                
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <TextView
+                        android:id="@+id/tv_step_header"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Hướng dẫn bước 1"
+                        android:textColor="#1F2937"
+                        android:textSize="22sp"
+                        android:textStyle="bold"
+                        android:layout_marginBottom="12dp" />
+
+                    <TextView
+                        android:id="@+id/tv_step_instructions"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Nội dung hướng dẫn..."
+                        android:textColor="#4B5563"
+                        android:textSize="16sp"
+                        android:lineSpacingExtra="6dp" />
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+            <!-- ── Timer section ── -->
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cv_timer_container"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:layout_marginEnd="16dp"
+                android:layout_marginTop="16dp"
+                app:cardCornerRadius="16dp"
+                app:cardElevation="2dp"
+                app:cardBackgroundColor="#FEF3C7">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:padding="20dp">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="16dp">
+                        
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Thời gian đếm ngược"
+                            android:textColor="#92400E"
+                            android:textStyle="bold"
+                            android:textSize="14sp" />
+
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_alignParentEnd="true"
+                            android:src="@android:drawable/ic_menu_recent_history"
+                            app:tint="#D97706" />
+                    </RelativeLayout>
+
+                    <TextView
+                        android:id="@+id/tv_timer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="00:00"
+                        android:textColor="#B45309"
+                        android:textSize="48sp"
+                        android:textStyle="bold"
+                        android:fontFamily="sans-serif-medium"
+                        android:layout_marginBottom="16dp" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:gravity="center">
+
+                        <LinearLayout
+                            android:id="@+id/btn_timer_toggle"
+                            android:layout_width="0dp"
+                            android:layout_weight="1"
+                            android:layout_height="52dp"
+                            android:background="@drawable/bg_pill_bf6a02"
+                            android:backgroundTint="#D97706"
+                            android:orientation="horizontal"
+                            android:gravity="center">
+
+                            <TextView
+                                android:id="@+id/tv_timer_action"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:text="Bắt đầu"
+                                android:textColor="#FFFFFF"
+                                android:textSize="18sp"
+                                android:textStyle="bold" />
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/btn_timer_reset"
+                            android:layout_width="52dp"
+                            android:layout_height="52dp"
+                            android:layout_marginStart="16dp"
+                            android:background="@drawable/bg_circle_outline"
+                            android:backgroundTint="#FCD34D"
+                            android:gravity="center"
+                            android:text="↺"
+                            android:textColor="#92400E"
+                            android:textStyle="bold"
+                            android:textSize="24sp" />
+                    </LinearLayout>
+                </LinearLayout>
+            </androidx.cardview.widget.CardView>
+
+        </LinearLayout>
+    </androidx.core.widget.NestedScrollView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

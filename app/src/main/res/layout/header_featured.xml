@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingBottom="24dp"
+    android:background="@drawable/bg_header_rounded">
+
+    <!-- Logo icon + App name row -->
+    <ImageView
+        android:id="@+id/iv_logo"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/bg_quick_action_shop"
+        android:backgroundTint="#33FFFFFF"
+        android:padding="8dp"
+        android:src="@drawable/ic_chef_hat"
+        app:tint="@color/white"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tv_app_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="12dp"
+        android:text="CookApp"
+        android:textColor="@color/white"
+        android:textSize="20sp"
+        android:letterSpacing="0.05"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@id/iv_logo"
+        app:layout_constraintStart_toEndOf="@id/iv_logo"
+        app:layout_constraintTop_toTopOf="@id/iv_logo" />
+
+    <!-- Notification Bell -->
+    <ImageView
+        android:id="@+id/iv_notification"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginTop="20dp"
+        android:src="@android:drawable/ic_popup_reminder"
+        android:backgroundTint="#99FFFFFF"
+        android:padding="8dp"
+        app:tint="@color/white"
+        app:layout_constraintEnd_toStartOf="@id/iv_avatar"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Avatar -->
+    <ImageView
+        android:id="@+id/iv_avatar"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="20dp"
+        android:src="@android:drawable/ic_menu_myplaces"
+        android:background="@drawable/bg_header_rounded"
+        android:backgroundTint="#99FFFFFF"
+        android:padding="2dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Main Heading -->
+    <TextView
+        android:id="@+id/tv_heading"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="24dp"
+        android:text="Hôm nay nấu gì? 👨‍🍳"
+        android:textColor="@color/white"
+        android:textSize="28sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/iv_logo" />
+
+    <!-- Subtitle -->
+    <TextView
+        android:id="@+id/tv_subtitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="4dp"
+        android:text="Khám phá hơn 1000+ công thức ngon"
+        android:textColor="#CCFFFFFF"
+        android:textSize="14sp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_heading" />
+
+    <!-- Search bar MD3  -->
+    <TextView
+        android:id="@+id/et_search"
+        android:layout_width="0dp"
+        android:layout_height="56dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/bg_search_md3"
+        android:drawableStart="@drawable/ic_search_md3"
+        android:drawablePadding="12dp"
+        android:elevation="1dp"
+        android:gravity="center_vertical"
+        android:text="Tìm tên món hoặc nguyên liệu..."
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+        android:textColor="#49454F"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_subtitle" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="12dp"
+    android:background="@drawable/bg_post_card"
+    android:orientation="vertical"
+    android:paddingBottom="12dp">
+
+    <!-- Header: Avatar, Name, Time, Bookmark -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="12dp"
+        android:gravity="center_vertical">
+        
+        <!-- Standard Android ImageView for circular avatar placeholder -->
+        <androidx.cardview.widget.CardView
+            android:layout_width="44dp"
+            android:layout_height="44dp"
+            app:cardCornerRadius="22dp"
+            app:cardElevation="0dp">
+            
+            <ImageView
+                android:id="@+id/iv_author_avatar"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:src="@drawable/img_category3" />
+        </androidx.cardview.widget.CardView>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginStart="12dp"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/tv_author_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Lê Tiến Dương"
+                android:textColor="#1C1B1F"
+                android:textSize="13sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_time_ago"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="1 ngày trước"
+                android:textColor="#801C1B1F"
+                android:textSize="11sp" />
+        </LinearLayout>
+
+        <!-- Bookmark icon -->
+        <ImageView
+            android:id="@+id/iv_bookmark"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:padding="2dp"
+            android:src="@drawable/ic_bookmark_outline"
+            app:tint="#1C1B1F" />
+    </LinearLayout>
+
+    <!-- Post Text content -->
+    <TextView
+        android:id="@+id/tv_post_content"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp"
+        android:paddingBottom="8dp"
+        android:text="Em xin bí quyết nướng thịt ạ!"
+        android:textColor="#1C1B1F"
+        android:textSize="13sp" />
+
+    <!-- Post Main Image -->
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="180dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp"
+        android:layout_marginBottom="12dp"
+        app:cardCornerRadius="8dp"
+        app:cardElevation="0dp">
+
+        <ImageView
+            android:id="@+id/iv_post_image"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/img_category3" />
+    </androidx.cardview.widget.CardView>
+
+    <!-- Post Actions -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingStart="12dp"
+        android:paddingEnd="12dp">
+
+        <LinearLayout
+            android:id="@+id/btn_like"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/iv_like_icon"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:src="@drawable/ic_heart_outline"
+                app:tint="#1C1B1F" />
+
+            <TextView
+                android:id="@+id/tv_like_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:text="200"
+                android:textColor="#1C1B1F"
+                android:textSize="12sp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/btn_comment"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:gravity="center_vertical"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:src="@drawable/ic_chat_outline"
+                app:tint="#1C1B1F" />
+
+            <TextView
+                android:id="@+id/tv_comment_count"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="6dp"
+                android:text="20"
+                android:textColor="#1C1B1F"
+                android:textSize="12sp" />
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

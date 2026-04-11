@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="16dp"
+    android:layout_marginBottom="10dp"
+    app:cardCornerRadius="14dp"
+    app:cardElevation="2dp"
+    app:cardBackgroundColor="#FFFFFF">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="14dp">
+
+        <!-- Hàng 1: Tên + nút xóa -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/tv_cart_item_name"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Thịt gà"
+                android:textColor="#1A1A1A"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/btn_trash"
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:src="@android:drawable/ic_menu_delete"
+                app:tint="#BBBBBB" />
+        </LinearLayout>
+
+        <!-- Hàng 2: Đơn vị + giá đơn vị -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="4dp"
+            android:gravity="center_vertical">
+
+            <TextView
+                android:id="@+id/tv_cart_item_unit"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="Đơn vị: 500g"
+                android:textColor="#888888"
+                android:textSize="13sp" />
+
+            <TextView
+                android:id="@+id/tv_cart_item_unit_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="45.000 đ / đơn vị"
+                android:textColor="#BF6A02"
+                android:textSize="13sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <!-- Divider -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="#F2F2F2"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp" />
+
+        <!-- Hàng 3: Số lượng + thành tiền -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical">
+
+            <!-- Nút − -->
+            <FrameLayout
+                android:id="@+id/btn_minus"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:background="@drawable/bg_circle_ff7043">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="−"
+                    android:textColor="#FFFFFF"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+            </FrameLayout>
+
+            <!-- Số lượng -->
+            <TextView
+                android:id="@+id/tv_qty"
+                android:layout_width="40dp"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:text="1"
+                android:textColor="#1A1A1A"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <!-- Nút + -->
+            <FrameLayout
+                android:id="@+id/btn_plus"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:background="@drawable/bg_circle_ff7043">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="+"
+                    android:textColor="#FFFFFF"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+            </FrameLayout>
+
+            <!-- Spacer -->
+            <Space
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_weight="1" />
+
+            <!-- Thành tiền -->
+            <TextView
+                android:id="@+id/tv_cart_item_price"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="135.000 đ"
+                android:textColor="#E53935"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+    </LinearLayout>
+</androidx.cardview.widget.CardView>

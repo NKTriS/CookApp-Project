@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    tools:context=".ProfileActivity">
+
+    <!-- Scrollable content -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="48dp">
+
+            <!-- Teal wave header -->
+            <FrameLayout
+                android:layout_width="match_parent"
+                android:layout_height="130dp">
+
+                <!-- Using solid background instead of vector wave for simplicity, but can be a custom shape -->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="#2AD2C1" />
+
+                <!-- Back button -->
+                <ImageView
+                    android:id="@+id/iv_back"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_gravity="bottom|start"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginBottom="16dp"
+                    android:padding="8dp"
+                    android:src="@drawable/ic_back_arrow"
+                    app:tint="#1A1A1A" />
+                
+                <!-- Settings button -->
+                <ImageView
+                    android:id="@+id/iv_settings"
+                    android:layout_width="36dp"
+                    android:layout_height="36dp"
+                    android:layout_gravity="bottom|end"
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginBottom="16dp"
+                    android:padding="8dp"
+                    android:src="@drawable/ic_nav_settings"
+                    app:tint="#1A1A1A" />
+            </FrameLayout>
+
+            <!-- Avatar -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center_horizontal"
+                android:layout_marginTop="-52dp">
+
+                <ImageView
+                    android:layout_width="104dp"
+                    android:layout_height="105dp"
+                    android:src="@drawable/img_avatar"
+                    android:scaleType="centerCrop"
+                    android:background="@drawable/bg_circle_outline"
+                    android:backgroundTint="#FFFFFF"
+                    android:padding="4dp"
+                    android:clipToOutline="true" />
+                
+                <TextView
+                    android:id="@+id/tv_user_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Nguyễn Khắc Trí"
+                    android:textColor="#000000"
+                    android:textSize="27sp"
+                    android:textStyle="bold"
+                    android:layout_marginTop="12dp" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="8dp"
+                    android:paddingBottom="16dp">
+                    
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:layout_marginEnd="32dp">
+                        <TextView android:id="@+id/tv_count_posts" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0" android:textSize="16sp" android:textColor="#000000" android:textStyle="bold" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Bài viết" android:textSize="16sp" android:textColor="#000000" android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:layout_marginEnd="32dp">
+                        <TextView android:id="@+id/tv_count_saved" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0" android:textSize="16sp" android:textColor="#000000" android:textStyle="bold" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Đã lưu" android:textSize="16sp" android:textColor="#000000" android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:gravity="center"
+                        android:layout_marginEnd="32dp">
+                        <TextView android:id="@+id/tv_count_reviews" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0" android:textSize="16sp" android:textColor="#000000" android:textStyle="bold" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Đánh giá" android:textSize="16sp" android:textColor="#000000" android:textStyle="bold" />
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:gravity="center">
+                        <TextView android:id="@+id/tv_count_comments" android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="0" android:textSize="16sp" android:textColor="#000000" android:textStyle="bold" />
+                        <TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:text="Bình luận" android:textSize="16sp" android:textColor="#000000" android:textStyle="bold" />
+                    </LinearLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- My Posts -->
+            <FrameLayout
+                android:id="@+id/btn_my_posts"
+                android:layout_width="match_parent"
+                android:layout_height="233dp"
+                android:layout_marginTop="16dp">
+                
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/img_category2"
+                    android:scaleType="centerCrop"
+                    android:alpha="0.7"/>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="#1A000000" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="Bài viết của tôi"
+                    android:textColor="#000000"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+            </FrameLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="25dp"
+                android:background="#FFFFFF" />
+
+            <!-- Community -->
+            <FrameLayout
+                android:id="@+id/btn_community"
+                android:layout_width="match_parent"
+                android:layout_height="268dp">
+
+                <ImageView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/img_category4"
+                    android:scaleType="centerCrop"/>
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="#40000000" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:text="Cộng đồng người dùng"
+                    android:textColor="#FFFFFF"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+            </FrameLayout>
+
+            <!-- Logout button -->
+            <LinearLayout
+                android:id="@+id/btn_logout"
+                android:layout_width="match_parent"
+                android:layout_height="52dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="24dp"
+                android:background="@drawable/bg_box_8e8e93_stroke"
+                android:backgroundTint="#FFF3F3"
+                android:gravity="center"
+                android:orientation="horizontal">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="🚪  Đăng xuất"
+                    android:textColor="#FF383C"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>

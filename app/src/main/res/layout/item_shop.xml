@@ -1,0 +1,105 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="140dp"
+    android:layout_marginStart="16dp"
+    android:layout_marginEnd="16dp"
+    android:layout_marginBottom="12dp"
+    app:cardCornerRadius="16dp"
+    app:cardBackgroundColor="#FFFFFF"
+    app:cardElevation="3dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal">
+
+        <!-- Left: Product Image -->
+        <ImageView
+            android:id="@+id/iv_product"
+            android:layout_width="130dp"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:src="@drawable/img_category3" />
+
+        <!-- Right: Info -->
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:paddingStart="12dp"
+            android:paddingTop="10dp"
+            android:paddingEnd="12dp"
+            android:paddingBottom="0dp">
+
+            <!-- Store badge -->
+            <TextView
+                android:id="@+id/tv_store_badge"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_chip_store"
+                android:paddingStart="8dp"
+                android:paddingTop="2dp"
+                android:paddingEnd="8dp"
+                android:paddingBottom="2dp"
+                android:text="WinMart"
+                android:textColor="#FF7043"
+                android:textSize="11sp"
+                android:textStyle="bold"
+                android:layout_marginBottom="4dp" />
+
+            <!-- Product name -->
+            <TextView
+                android:id="@+id/tv_product_title"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Thịt lợn"
+                android:textColor="#1C1B1F"
+                android:textSize="15sp"
+                android:textStyle="bold"
+                android:maxLines="2"
+                android:ellipsize="end" />
+
+            <!-- Unit -->
+            <TextView
+                android:id="@+id/tv_product_unit"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="500g"
+                android:textColor="#888888"
+                android:textSize="13sp" />
+
+            <!-- Rating -->
+            <TextView
+                android:id="@+id/tv_product_rating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="2dp"
+                android:text="⭐ 4.8"
+                android:textColor="#F59E0B"
+                android:textSize="12sp" />
+
+            <Space
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <!-- Price bar -->
+            <TextView
+                android:id="@+id/tv_product_price"
+                android:layout_width="match_parent"
+                android:layout_height="38dp"
+                android:background="#FF7043"
+                android:gravity="center"
+                android:text="45.000 đ"
+                android:textColor="#FFFFFF"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+        </LinearLayout>
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

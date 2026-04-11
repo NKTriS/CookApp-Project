@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#0F1117">
+
+    <!-- Search -->
+    <EditText
+        android:id="@+id/et_search"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="16dp"
+        android:background="@drawable/bg_search_md3"
+        android:drawableStart="@drawable/ic_search_md3"
+        android:drawablePadding="8dp"
+        android:hint="Tìm theo tên hoặc email..."
+        android:inputType="text"
+        android:paddingStart="14dp"
+        android:paddingEnd="14dp"
+        android:textColor="#E8EAF0"
+        android:textColorHint="#5A5E70"
+        android:textSize="14sp" />
+
+    <!-- Loading -->
+    <ProgressBar
+        android:id="@+id/progress_bar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="40dp"
+        android:indeterminateTint="#FF7043"
+        android:visibility="gone" />
+
+    <!-- Users List -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_users"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="12dp"
+        android:clipToPadding="false"
+        android:layout_marginTop="8dp" />
+
+    <!-- Empty state -->
+    <TextView
+        android:id="@+id/tv_empty"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="60dp"
+        android:text="Không tìm thấy người dùng"
+        android:textColor="#5A5E70"
+        android:textSize="14sp"
+        android:visibility="gone" />
+
+</LinearLayout>

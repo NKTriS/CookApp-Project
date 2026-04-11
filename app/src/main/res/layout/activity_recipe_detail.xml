@@ -1,0 +1,565 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    tools:context=".RecipeDetailActivity">
+
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintBottom_toTopOf="@id/bottom_nav"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="120dp">
+
+            <!-- Back Arrow -->
+            <ImageView
+                android:id="@+id/iv_back"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_marginStart="16dp"
+                android:layout_marginTop="48dp"
+                android:padding="2dp"
+                android:src="@drawable/ic_back_arrow"
+                app:tint="#000000" />
+
+
+            <!-- Title: Tên món ăn -->
+            <TextView
+                android:id="@+id/tv_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="20dp"
+                android:text="Tên món ăn"
+                android:textColor="#000000"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:fontFamily="sans-serif-bold" />
+
+            <!-- Author: Tác giả -->
+            <TextView
+                android:id="@+id/tv_author"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="4dp"
+                android:text="Tác giả"
+                android:textColor="#000000"
+                android:textSize="15sp" />
+
+            <!-- Info Bar: Time | Difficulty | Icons -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="24dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <!-- Clock Icon -->
+                <ImageView
+                    android:layout_width="16dp"
+                    android:layout_height="16dp"
+                    android:src="@drawable/ic_clock"
+                    app:tint="#000000" />
+
+                <!-- Time -->
+                <TextView
+                    android:id="@+id/tv_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="4dp"
+                    android:text="120 phút"
+                    android:textColor="#000000"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <!-- Divider -->
+                <View
+                    android:layout_width="1dp"
+                    android:layout_height="16dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginEnd="16dp"
+                    android:background="#000000" />
+
+                <!-- Difficulty -->
+                <TextView
+                    android:id="@+id/tv_difficulty"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Trung bình"
+                    android:textColor="#000000"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <!-- Spacer -->
+                <Space
+                    android:layout_width="0dp"
+                    android:layout_height="1dp"
+                    android:layout_weight="1" />
+
+                <!-- Heart Icon -->
+                <ImageView
+                    android:id="@+id/iv_favorite"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:src="@drawable/ic_star_outline"
+                    app:tint="#BF6A02" />
+
+                <!-- Share Icon -->
+                <ImageView
+                    android:id="@+id/iv_share"
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:layout_marginStart="16dp"
+                    android:src="@drawable/ic_share_outline" />
+            </LinearLayout>
+
+            <!-- Description Box -->
+            <TextView
+                android:id="@+id/tv_description"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:minHeight="80dp"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="24dp"
+                android:background="@drawable/bg_grey_box"
+                android:padding="12dp"
+                android:text="Mô tả"
+                android:textColor="#000000"
+                android:textSize="15sp" />
+
+            <!-- Rating -->
+            <LinearLayout
+                android:id="@+id/btn_rating"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="8dp"
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+                
+                <TextView
+                    android:id="@+id/tv_rating_val"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Đánh giá: 4.8/5 ⭐"
+                    android:textColor="#000000"
+                    android:textSize="15sp"
+                    android:textStyle="bold" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="Xem đánh giá"
+                    android:textColor="#BF6A02"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+            <!-- Media Banner (Image/Video) -->
+            <FrameLayout
+                android:id="@+id/video_block"
+                android:layout_width="match_parent"
+                android:layout_height="220dp"
+                android:layout_marginTop="16dp"
+                android:background="#000000">
+
+                <!-- Thumbnail + Play button (hiện khi chưa phát) -->
+                <FrameLayout
+                    android:id="@+id/video_thumbnail_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:id="@+id/iv_media"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/img_category3" />
+
+                    <!-- Nền mờ để nút play nổi bật hơn -->
+                    <View
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:background="#55000000" />
+
+                    <!-- Play Button tròn -->
+                    <FrameLayout
+                        android:id="@+id/btn_play_video"
+                        android:layout_width="72dp"
+                        android:layout_height="72dp"
+                        android:layout_gravity="center"
+                        android:background="@drawable/bg_circle_orange"
+                        android:backgroundTint="#CC000000">
+
+                        <ImageView
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:layout_gravity="center"
+                            android:src="@drawable/ic_play_triangle"
+                            app:tint="#FFFFFF" />
+                    </FrameLayout>
+
+                    <!-- Label "Video hướng dẫn" -->
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="bottom|start"
+                        android:layout_marginStart="12dp"
+                        android:layout_marginBottom="10dp"
+                        android:background="#88000000"
+                        android:paddingHorizontal="8dp"
+                        android:paddingVertical="4dp"
+                        android:text="▶  Video hướng dẫn"
+                        android:textColor="#FFFFFF"
+                        android:textSize="13sp"
+                        android:textStyle="bold" />
+                </FrameLayout>
+
+                <!-- ExoPlayer PlayerView (cho video MP4 / direct link) -->
+                <androidx.media3.ui.PlayerView
+                    android:id="@+id/player_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="gone"
+                    app:use_controller="true"
+                    app:show_timeout="3000"
+                    app:resize_mode="fill" />
+
+                <!-- VideoView — Android native player (backup cho audio) -->
+                <VideoView
+                    android:id="@+id/native_video_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="gone" />
+
+                <!-- Fullscreen toggle button overlay -->
+                <ImageView
+                    android:id="@+id/btn_video_fullscreen"
+                    android:layout_width="44dp"
+                    android:layout_height="44dp"
+                    android:layout_gravity="bottom|end"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginBottom="48dp"
+                    android:padding="10dp"
+                    android:src="@android:drawable/ic_menu_view"
+                    android:background="#88000000"
+                    android:scaleType="fitCenter"
+                    android:visibility="gone"
+                    android:elevation="20dp"
+                    app:tint="#FFFFFF" />
+
+                <!-- WebView — YouTube IFrame Player API (không cần thư viện ngoài) -->
+                <WebView
+                    android:id="@+id/web_view_video"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="gone" />
+
+            </FrameLayout>
+
+
+
+            <!-- Serving Size Controller -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="24dp"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
+
+                <!-- Label Pill -->
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:background="@drawable/bg_grey_pill"
+                    android:gravity="center"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:text="Số khẩu phần ăn"
+                    android:textColor="#000000"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
+
+                <!-- Minus Button -->
+                <TextView
+                    android:id="@+id/btn_serve_minus"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_marginStart="12dp"
+                    android:background="@drawable/bg_circle_orange"
+                    android:gravity="center"
+                    android:text="-"
+                    android:textColor="#FFFFFF"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <!-- Quantity -->
+                <TextView
+                    android:id="@+id/tv_serve_count"
+                    android:layout_width="32dp"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:text="3"
+                    android:textColor="#000000"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <!-- Plus Button -->
+                <TextView
+                    android:id="@+id/btn_serve_plus"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:background="@drawable/bg_circle_orange"
+                    android:gravity="center"
+                    android:text="+"
+                    android:textColor="#FFFFFF"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
+            <!-- Top Header Divider -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginEnd="24dp"
+                android:background="#000000" />
+
+            <!-- Tabs Row -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="24dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tab_ingredients"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:padding="16dp"
+                    android:text="Nguyên liệu"
+                    android:textColor="#000000"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tab_nutrition"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:gravity="center"
+                    android:padding="16dp"
+                    android:background="#F5F5F5"
+                    android:text="Dinh dưỡng"
+                    android:textColor="#1C1B1F"
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginStart="24dp"
+                android:layout_marginEnd="24dp"
+                android:background="#000000" />
+
+            <!-- Bottom Header Divider -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="24dp"
+                android:background="#D9D9D9" />
+
+            <!-- Ingredients List -->
+            <LinearLayout
+                android:id="@+id/ll_ingredients"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="24dp"
+                android:orientation="vertical">
+            </LinearLayout>
+
+            <!-- Nutrition List -->
+            <LinearLayout
+                android:id="@+id/ll_nutrition"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="24dp"
+                android:orientation="vertical"
+                android:visibility="gone">
+            </LinearLayout>
+
+            <!-- Shopping List Button -->
+            <LinearLayout
+                android:id="@+id/btn_shopping_list"
+                android:layout_width="wrap_content"
+                android:layout_height="50dp"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="24dp"
+                android:background="@drawable/bg_btn_orange_pill"
+                android:backgroundTint="#E4D8C8"
+                android:gravity="center"
+                android:paddingHorizontal="24dp"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Danh sách mua sắm"
+                    android:textColor="#000000"
+                    android:textSize="16sp"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_marginStart="8dp"
+                    android:src="@drawable/ic_cart"
+                    app:tint="#000000" />
+            </LinearLayout>
+
+            <!-- Inline Shopping List (Hidden by default) -->
+            <LinearLayout
+                android:id="@+id/ll_inline_shopping_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="24dp"
+                android:background="@drawable/bg_grey_box"
+                android:orientation="vertical"
+                android:padding="16dp"
+                android:visibility="gone">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Thêm vào danh sách mua sắm:"
+                    android:textColor="#000000"
+                    android:textSize="16sp"
+                    android:textStyle="bold"
+                    android:layout_marginBottom="12dp" />
+
+                <!-- Danh sách nguyên liệu sẽ được điền bởi Java -->
+                <LinearLayout
+                    android:id="@+id/ll_shopping_items"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical" />
+
+                <Button
+                    android:id="@+id/btn_confirm_shopping"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginTop="12dp"
+                    android:text="Lưu danh sách"
+                    android:backgroundTint="#BF6A02"
+                    android:textColor="#FFFFFF" />
+            </LinearLayout>
+
+            <!-- Steps Section Header -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="32dp"
+                android:layout_marginEnd="24dp"
+                android:background="@drawable/bg_rounded_16dp_ccb6b6"
+                android:gravity="center"
+                android:padding="12dp"
+                android:text="Các bước thực hiện"
+                android:textColor="#000000"
+                android:textSize="22sp"
+                android:textStyle="bold" />
+
+            <!-- Steps List -->
+            <LinearLayout
+                android:id="@+id/ll_steps"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="24dp"
+                android:background="@drawable/bg_rounded_16dp_ccb6b6"
+                android:orientation="vertical"
+                android:padding="16dp">
+
+                <!-- Nếu trống, Code Java nên thêm dòng 'Chưa có hướng dẫn' -->
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
+
+    <!-- ── BOTTOM NAVIGATION ── -->
+    <!-- Bottom Navigation Bar (Include) -->
+    <include
+        android:id="@+id/bottom_nav"
+        layout="@layout/layout_bottom_nav"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <!-- ── STICKY LET'S COOK BUTTON (after nav so it floats on top) ── -->
+    <LinearLayout
+        android:id="@+id/btn_lets_cook"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        app:layout_constraintBottom_toTopOf="@id/bottom_nav"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/bg_btn_orange_pill"
+        android:backgroundTint="#BF6A02"
+        android:gravity="center"
+        android:paddingHorizontal="24dp"
+        android:orientation="horizontal"
+        android:elevation="8dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Let's cook"
+            android:textColor="#FFFFFF"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <ImageView
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_marginStart="8dp"
+            android:src="@drawable/ic_play_triangle"
+            app:tint="#FFFFFF" />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

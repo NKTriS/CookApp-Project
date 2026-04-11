@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="20dp"
+    android:background="#FFFFFF">
+
+    <!-- Title -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Hủy đơn hàng"
+        android:textColor="#1A1A1A"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="4dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Vui lòng chọn lý do hủy đơn hàng"
+        android:textColor="#8E8E93"
+        android:textSize="13sp"
+        android:layout_marginBottom="16dp"/>
+
+    <!-- Lý do hủy đơn -->
+    <RadioGroup
+        android:id="@+id/rg_cancel_reasons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="12dp">
+
+        <RadioButton
+            android:id="@+id/rb_reason_1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Đổi ý, không muốn mua nữa"
+            android:textColor="#1A1A1A"
+            android:textSize="14sp"
+            android:buttonTint="#FE2C55"
+            android:padding="8dp"/>
+
+        <RadioButton
+            android:id="@+id/rb_reason_2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Đặt nhầm sản phẩm / số lượng"
+            android:textColor="#1A1A1A"
+            android:textSize="14sp"
+            android:buttonTint="#FE2C55"
+            android:padding="8dp"/>
+
+        <RadioButton
+            android:id="@+id/rb_reason_3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Muốn thay đổi địa chỉ giao hàng"
+            android:textColor="#1A1A1A"
+            android:textSize="14sp"
+            android:buttonTint="#FE2C55"
+            android:padding="8dp"/>
+
+        <RadioButton
+            android:id="@+id/rb_reason_4"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Tìm được giá tốt hơn ở nơi khác"
+            android:textColor="#1A1A1A"
+            android:textSize="14sp"
+            android:buttonTint="#FE2C55"
+            android:padding="8dp"/>
+
+        <RadioButton
+            android:id="@+id/rb_reason_other"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Lý do khác"
+            android:textColor="#1A1A1A"
+            android:textSize="14sp"
+            android:buttonTint="#FE2C55"
+            android:padding="8dp"/>
+    </RadioGroup>
+
+    <!-- Custom reason input (only shown when "Lý do khác" is selected) -->
+    <EditText
+        android:id="@+id/et_other_reason"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="Nhập lý do của bạn..."
+        android:inputType="textMultiLine"
+        android:background="@drawable/bg_rounded_16dp_d9d9d9"
+        android:backgroundTint="#F5F5F5"
+        android:padding="12dp"
+        android:minLines="2"
+        android:textColor="#1A1A1A"
+        android:textSize="13sp"
+        android:layout_marginBottom="16dp"
+        android:visibility="gone"/>
+
+    <!-- Divider -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:background="#F0F0F0"
+        android:layout_marginBottom="12dp"/>
+
+    <!-- Chính sách hoàn trả -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Chính sách hoàn trả"
+        android:textColor="#1A1A1A"
+        android:textSize="13sp"
+        android:textStyle="bold"
+        android:layout_marginBottom="6dp"/>
+
+    <TextView
+        android:id="@+id/tv_dialog_refund_policy"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="• Thanh toán COD: Không phát sinh hoàn trả.\n• Chuyển khoản: Hoàn tiền trong 3–5 ngày làm việc qua tài khoản gốc."
+        android:textColor="#666666"
+        android:textSize="12sp"
+        android:lineSpacingMultiplier="1.4"
+        android:layout_marginBottom="20dp"/>
+
+    <!-- Buttons -->
+    <LinearLayout
+        android:id="@+id/btn_confirm_cancel"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:layout_marginBottom="10dp"
+        android:background="@drawable/bg_pill_ff7043"
+        android:backgroundTint="#FE2C55"
+        android:gravity="center">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Xác nhận hủy đơn"
+            android:textColor="#FFFFFF"
+            android:textSize="15sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/btn_keep_order"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:background="@drawable/bg_box_8e8e93_stroke"
+        android:backgroundTint="#FFFFFF"
+        android:gravity="center"
+        android:layout_marginBottom="8dp">
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Giữ đơn hàng"
+            android:textColor="#1A1A1A"
+            android:textSize="14sp"
+            android:textStyle="bold" />
+    </LinearLayout>
+
+</LinearLayout>
