@@ -471,7 +471,5 @@ Dự án này được phát triển cho mục đích học tập tại **PTIT**
 ---
 
 <p align="center">
-  Made with ❤️ by <b>Nhóm 02 — D22AT-01</b> | PTIT 2026
+  Made with ❤️ by <b>Nhóm 05 — D22AT-03</b> | PTIT 2026
 </p>
-
-# Cập nhật
