@@ -36,3 +36,5 @@ async function main() {
 }
 
 main().catch(e => { console.error('❌', e.message); process.exit(1); });
+
+// Cập nhật
