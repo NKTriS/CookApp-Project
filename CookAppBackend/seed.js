@@ -105,50 +105,62 @@ async function seedDatabase() {
         const [r1, r2, r3, r4, r5, r6, r7, r8, r9, r10, r11, r12] = await Recipe.bulkCreate([
             { id: 1, title:'Gà xào sả ớt', description:'Món ăn đưa cơm thơm ngon đậm vị gia đình.',
               image_url:'/videos/thumbnails/ga_xao_xa_ot.jpg',
+              video_url:'/videos/ga_xao_xa_ot.mp4', video_thumbnail_url:'/videos/thumbnails/ga_xao_xa_ot.jpg',
               cook_time:30, difficulty:'Dễ', servings:4, calories:350, category_id:catGiaDinh.id, diet_type_id:1 },
 
             { id: 2, title:'Đậu phụ sốt cà chua', description:'Món chay thanh đạm, dễ nấu, phù hợp ăn kiêng nhẹ.',
               image_url:'/videos/thumbnails/dau_phu_sot_ca_chua.jpg',
+              video_url:'/videos/dau_phu_sot_ca_chua.mp4', video_thumbnail_url:'/videos/thumbnails/dau_phu_sot_ca_chua.jpg',
               cook_time:20, difficulty:'Rất dễ', servings:2, calories:180, category_id:catChay.id, diet_type_id:1 },
 
             { id: 3, title:'Bún bò Huế', description:'Đặc sản miền Trung với nước dùng cay nồng thơm mùi ruốc sả.',
               image_url:'/videos/thumbnails/bun_bo_hue.jpg',
+              video_url:'/videos/bun_bo_hue.mp4', video_thumbnail_url:'/videos/thumbnails/bun_bo_hue.jpg',
               cook_time:90, difficulty:'Trung bình', servings:4, calories:480, category_id:catDacSan.id, diet_type_id:1 },
 
             { id: 4, title:'Phở Bò truyền thống', description:'Phở bò Hà Nội với nước dùng trong, ngọt tự nhiên từ xương bò hầm kỹ.',
               image_url:'/videos/thumbnails/pho_bo_truyen_thong.jpg',
+              video_url:'/videos/pho_bo_truyen_thong.mp4', video_thumbnail_url:'/videos/thumbnails/pho_bo_truyen_thong.jpg',
               cook_time:120, difficulty:'Khó', servings:4, calories:420, category_id:catDacSan.id, diet_type_id:1 },
 
             { id: 5, title:'Bánh mì trứng ốp la', description:'Bữa sáng nhanh gọn 10 phút, đủ năng lượng cho cả ngày làm việc.',
               image_url:'/videos/thumbnails/banh_mi_trung_op_la.jpg',
+              video_url:'/videos/banh_mi_trung_op_la.mp4', video_thumbnail_url:'/videos/thumbnails/banh_mi_trung_op_la.jpg',
               cook_time:10, difficulty:'Rất dễ', servings:1, calories:320, category_id:catNhanh.id, diet_type_id:1 },
 
             { id: 6, title:'Canh rau cải nấu thịt heo', description:'Canh thanh mát giải nhiệt, bổ dưỡng và dễ nấu cho bữa cơm gia đình.',
               image_url:'/videos/thumbnails/canh_rau_nau_thit_heo.jpg',
+              video_url:'/videos/canh_rau_nau_thit_heo.mp4', video_thumbnail_url:'/videos/thumbnails/canh_rau_nau_thit_heo.jpg',
               cook_time:20, difficulty:'Dễ', servings:3, calories:150, category_id:catGiaDinh.id, diet_type_id:1 },
 
             { id: 7, title:'Cơm rang dưa bò', description:'Cơm rang thơm ngon từ thịt bò và dưa cải muối, nhanh gọn cho bữa trưa.',
               image_url:'/videos/thumbnails/com_rang_dua_bo.jpg',
+              video_url:'/videos/com_rang_dua_bo.mp4', video_thumbnail_url:'/videos/thumbnails/com_rang_dua_bo.jpg',
               cook_time:15, difficulty:'Dễ', servings:2, calories:400, category_id:catNhanh.id, diet_type_id:1 },
 
             { id: 8, title:'Tôm xào bông cải', description:'Tôm tươi xào với bông cải xanh giòn ngọt, ít dầu mỡ và giàu dinh dưỡng.',
               image_url:'/videos/thumbnails/tom_xao_bong_cai.jpg',
+              video_url:'/videos/tom_xao_bong_cai.mp4', video_thumbnail_url:'/videos/thumbnails/tom_xao_bong_cai.jpg',
               cook_time:20, difficulty:'Dễ', servings:3, calories:220, category_id:catLanhManh.id, diet_type_id:1 },
 
             { id: 9, title:'Súp bí đỏ kem', description:'Súp bí đỏ mịn mượt, béo nhẹ từ kem tươi, thích hợp mùa đông.',
               image_url:'/videos/thumbnails/sup_bi_do_kem.jpg',
+              video_url:'/videos/sup_bi_do_kem.mp4', video_thumbnail_url:'/videos/thumbnails/sup_bi_do_kem.jpg',
               cook_time:30, difficulty:'Dễ', servings:4, calories:160, category_id:catLanhManh.id, diet_type_id:1 },
 
             { id: 10, title:'Gỏi cuốn tôm thịt', description:'Gỏi cuốn Việt Nam truyền thống với tôm, thịt, rau sống và tương hoisin.',
               image_url:'/videos/thumbnails/goi_cuon_tom_thit.jpg',
+              video_url:'/videos/goi_cuon_tom_thit.mp4', video_thumbnail_url:'/videos/thumbnails/goi_cuon_tom_thit.jpg',
               cook_time:40, difficulty:'Trung bình', servings:4, calories:180, category_id:catDacSan.id, diet_type_id:1 },
 
             { id: 11, title:'Chả giò (Nem rán)', description:'Chả giò giòn rụm với nhân thịt và rau củ đậm đà, kèm nước chấm chua ngọt.',
               image_url:'/videos/thumbnails/cha_gio.jpg',
+              video_url:'/videos/cha_gio.mp4', video_thumbnail_url:'/videos/thumbnails/cha_gio.jpg',
               cook_time:60, difficulty:'Trung bình', servings:6, calories:280, category_id:catDacSan.id, diet_type_id:1 },
 
             { id: 12, title:'Bánh flan caramel', description:'Bánh flan mềm mịn như lụa, thơm béo với lớp caramel đắng nhẹ đẹp mắt.',
               image_url:'/videos/thumbnails/banh_flan.jpg',
+              video_url:'/videos/banh_flan.mp4', video_thumbnail_url:'/videos/thumbnails/banh_flan.jpg',
               cook_time:50, difficulty:'Trung bình', servings:6, calories:190, category_id:catTrangMieng.id, diet_type_id:1 },
         ]);
         console.log('✅ Recipes inserted (12).');

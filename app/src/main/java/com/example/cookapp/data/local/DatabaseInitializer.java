@@ -14,11 +14,22 @@ import java.util.List;
 public class DatabaseInitializer {
 
         public static void populateAsync(final AppDatabase db) {
+                populateAsync(db, null);
+        }
+
+        public static void populateAsync(final AppDatabase db, final Runnable onComplete) {
                 new AsyncTask<Void, Void, Void>() {
                         @Override
                         protected Void doInBackground(Void... voids) {
                                 populateDB(db);
                                 return null;
+                        }
+
+                        @Override
+                        protected void onPostExecute(Void aVoid) {
+                                if (onComplete != null) {
+                                        onComplete.run();
+                                }
                         }
                 }.execute();
         }

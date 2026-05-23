@@ -33,28 +33,28 @@ import java.util.concurrent.Executors;
 
 public class CookingModeActivity extends AppCompatActivity {
 
-    // ── Views ────────────────────────────────────────────────────────────
+    // ── Giao diện (Views) ────────────────────────────────────────────────
     private TextView  tvStepIndicator;
-    private TextView  btnPrev, btnNext;          // orange pill TextViews
+    private TextView  btnPrev, btnNext;          // Các nút bấm chuyển bước dạng viên thuốc màu cam
     private TextView  tvTimer, tvTimerAction;
-    private TextView  btnTimerReset;             // ↺ circle TextView
+    private TextView  btnTimerReset;             // Nút tròn reset bộ đếm ↺
     private LinearLayout btnTimerToggle;
     private androidx.cardview.widget.CardView cvTimerContainer;
     private TextView  tvStepHeader, tvStepInstructions;
 
-    // ── Data ─────────────────────────────────────────────────────────────
+    // ── Dữ liệu (Data) ───────────────────────────────────────────────────
     private final List<RecipeStepEntity> steps = new ArrayList<>();
     private int currentIndex = 0;
     private String videoUrl = null;
 
-    // ── Video Player ─────────────────────────────────────────────────────
+    // ── Trình phát video (Video Player) ──────────────────────────────────
     private ExoPlayer player;
     private PlayerView playerView;
     private ImageView ivStepImage;
     private boolean isFullscreen = false;
     private boolean wasPlayingBeforePause = true;
 
-    // ── Timer ────────────────────────────────────────────────────────────
+    // ── Bộ hẹn giờ (Timer) ───────────────────────────────────────────────
     private CountDownTimer activeTimer;
     private int  timerSeconds    = 0;
     private int  remainingSeconds = 0;
@@ -66,7 +66,7 @@ public class CookingModeActivity extends AppCompatActivity {
         getWindow().addFlags(android.view.WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON); // Add Keep Screen On
         setContentView(R.layout.activity_cooking_mode);
 
-        // Bind views
+        // Khởi tạo liên kết các View từ XML layout
         tvStepIndicator    = findViewById(R.id.tv_step_indicator);
         btnPrev            = findViewById(R.id.btn_prev);
         btnNext            = findViewById(R.id.btn_next);
@@ -80,19 +80,19 @@ public class CookingModeActivity extends AppCompatActivity {
         playerView         = findViewById(R.id.player_view);
         ivStepImage        = findViewById(R.id.iv_step_image);
 
-        // Back → exit
+        // Bấm nút quay lại -> hủy bộ hẹn giờ và thoát màn hình
         ImageView ivBack = findViewById(R.id.iv_back);
         if (ivBack != null) ivBack.setOnClickListener(v -> { cancelTimer(); finish(); });
 
-        // Header nav pills
+        // Sự kiện chuyển tiếp các bước nấu ăn
         if (btnPrev != null) btnPrev.setOnClickListener(v -> navigate(-1));
         if (btnNext != null) btnNext.setOnClickListener(v -> navigate(+1));
 
-        // Timer
+        // Sự kiện điều khiển bộ hẹn giờ nấu ăn
         if (btnTimerToggle != null) btnTimerToggle.setOnClickListener(v -> toggleTimer());
         if (btnTimerReset  != null) btnTimerReset.setOnClickListener(v -> resetTimer());
 
-        // Load steps from DB
+        // Tải danh sách các bước nấu ăn từ cơ sở dữ liệu
         int recipeId = getIntent().getIntExtra("recipe_id", -1);
         if (recipeId == -1) {
             Toast.makeText(this, "Không tìm thấy công thức", Toast.LENGTH_SHORT).show();
@@ -215,13 +215,15 @@ public class CookingModeActivity extends AppCompatActivity {
             player = null;
         }
         
-        // Force audio to STREAM_MUSIC
+        // Bắt buộc luồng âm thanh truyền tải qua STREAM_MUSIC (luồng đa phương tiện)
         setVolumeControlStream(android.media.AudioManager.STREAM_MUSIC);
         
+        // Tối ưu hóa bộ đệm (LoadControl) để video stream mượt mà, tải trước nhanh
         DefaultLoadControl loadControl = new DefaultLoadControl.Builder()
             .setBufferDurationsMs(25000, 50000, 1500, 5000)
             .build();
         
+        // Sử dụng bộ đệm VideoCacheManager để lưu video cục bộ dưới dạng cache offline
         androidx.media3.datasource.DataSource.Factory cachedDataSourceFactory = 
             VideoCacheManager.buildCachedDataSourceFactory(this);
         
@@ -232,7 +234,7 @@ public class CookingModeActivity extends AppCompatActivity {
             )
             .build();
 
-        // Audio Focus
+        // Cấu hình thuộc tính Audio Focus tránh bị chồng âm thanh
         player.setAudioAttributes(
             new AudioAttributes.Builder()
                 .setContentType(C.AUDIO_CONTENT_TYPE_MOVIE)
@@ -241,7 +243,7 @@ public class CookingModeActivity extends AppCompatActivity {
             false // Không để hệ thống tự ý tắt tiếng
         );
 
-        // Volume set 1 lần duy nhất — KHÔNG gọi lặp lại trong listener
+        // Thiết lập âm lượng video tối đa (100% âm lượng)
         player.setVolume(1f);
 
         player.addListener(new androidx.media3.common.Player.Listener() {
@@ -309,7 +311,7 @@ public class CookingModeActivity extends AppCompatActivity {
             cvTimerContainer.setVisibility(timerSeconds > 0 ? View.VISIBLE : View.GONE);
         }
 
-        // Nav buttons visibility
+        // Kiểm soát hiển thị nút bấm điều hướng tùy theo bước hiện tại
         boolean isFirst = (index == 0);
         boolean isLast  = (index == total - 1);
         if (btnPrev != null) btnPrev.setVisibility(isFirst ? View.GONE : View.VISIBLE);
@@ -327,16 +329,18 @@ public class CookingModeActivity extends AppCompatActivity {
             }
         }
 
-        // Seek video to corresponding part using ClippingMediaSource
+        // Đồng bộ video: Tua video đến mốc thời gian giây bắt đầu của bước hiện tại
         if (player != null && videoUrl != null) {
             long startMs = step.video_start_time > 0 ? step.video_start_time * 1000L : 0;
             long endMs = 0;
             
+            // Lấy thời điểm bắt đầu của bước tiếp theo để làm mốc dừng của bước hiện tại
             if (index + 1 < total) {
                 RecipeStepEntity nextStep = steps.get(index + 1);
                 endMs = nextStep.video_start_time > 0 ? nextStep.video_start_time * 1000L : 0;
             }
 
+            // Sử dụng cơ chế Clipping Configuration để cắt nhỏ video, chỉ lặp lại phát phân đoạn của bước hiện tại
             MediaItem.ClippingConfiguration clippingConfig = new MediaItem.ClippingConfiguration.Builder()
                 .setStartPositionMs(startMs)
                 .setEndPositionMs(endMs > 0 ? endMs : C.TIME_END_OF_SOURCE)
@@ -362,45 +366,45 @@ public class CookingModeActivity extends AppCompatActivity {
         isFullscreen = !isFullscreen;
 
         if (isFullscreen) {
-            // Enter Fullscreen
+            // Thiết lập chế độ Toàn màn hình (Ẩn tiêu đề, thẻ hướng dẫn và bộ hẹn giờ)
             if (header != null) header.setVisibility(View.GONE);
             if (instructionsCard instanceof View) ((View) instructionsCard).setVisibility(View.GONE);
             if (timerCard instanceof View) ((View) timerCard).setVisibility(View.GONE);
 
-            // Expand CardView to take full screen
+            // Mở rộng CardView chứa trình phát chiếm toàn bộ chiều rộng và chiều cao màn hình
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT);
-            params.setMargins(0, 0, 0, 0); // Remove margins
+            params.setMargins(0, 0, 0, 0); // Loại bỏ lề
             cvVideo.setLayoutParams(params);
-            cvVideo.setRadius(0); // Remove rounded corners in fullscreen
+            cvVideo.setRadius(0); // Loại bỏ bo góc khi toàn màn hình
             
-            // True immersive fullscreen
+            // Bật cờ Immersive Fullscreen của hệ thống Android để ẩn cả thanh điều hướng hệ thống
             getWindow().getDecorView().setSystemUiVisibility(
                   View.SYSTEM_UI_FLAG_FULLSCREEN
                 | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
                 | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
             
-            // Force landscape
+            // É Ép xoay ngang màn hình (Landscape)
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         } else {
-            // Exit Fullscreen
+            // Thoát chế độ toàn màn hình (Khôi phục hiển thị các thành phần)
             if (header != null) header.setVisibility(View.VISIBLE);
             if (instructionsCard instanceof View) ((View) instructionsCard).setVisibility(View.VISIBLE);
             if (timerCard instanceof View) ((View) timerCard).setVisibility(View.VISIBLE);
 
-            // Restore CardView size
-            int heightPx = (int) (240 * getResources().getDisplayMetrics().density); // Restore 240dp height
-            int marginPx = (int) (16 * getResources().getDisplayMetrics().density); // Restore 16dp margin
+            // Khôi phục kích thước CardView chứa video về 240dp như cũ
+            int heightPx = (int) (240 * getResources().getDisplayMetrics().density); // Chiều cao 240dp
+            int marginPx = (int) (16 * getResources().getDisplayMetrics().density); // Lề 16dp
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT, heightPx);
             params.setMargins(marginPx, marginPx, marginPx, marginPx);
             cvVideo.setLayoutParams(params);
-            cvVideo.setRadius(16 * getResources().getDisplayMetrics().density); // Restore rounded corners
+            cvVideo.setRadius(16 * getResources().getDisplayMetrics().density); // Khôi phục bo góc 16dp
             
-            // Restore System UI
+            // Khôi phục hiển thị thanh điều hướng mặc định của thiết bị di động
             getWindow().getDecorView().setSystemUiVisibility(View.SYSTEM_UI_FLAG_VISIBLE);
             
-            // Restore portrait
+            // Xoay màn hình về hướng dọc mặc định (Portrait)
             setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
         }
     }

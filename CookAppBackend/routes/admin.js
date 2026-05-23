@@ -14,7 +14,7 @@ const fs = require('fs');
 const { GoogleGenerativeAI } = require('@google/generative-ai');
 const { GoogleAIFileManager } = require('@google/generative-ai/server');
 
-// Ensure directories exist
+// Đảm bảo các thư mục lưu trữ tĩnh tồn tại
 const imageDest = path.join(__dirname, '..', 'public', 'videos', 'thumbnails');
 const videoDest = path.join(__dirname, '..', 'public', 'videos');
 fs.mkdirSync(imageDest, { recursive: true });
@@ -43,7 +43,7 @@ const upload = multer({ storage });
 router.use(adminAuth);
 
 // ─────────────────────────────────────────────
-// DASHBOARD STATS
+// THỐNG KÊ HỆ THỐNG (DASHBOARD)
 // ─────────────────────────────────────────────
 router.get('/stats', async (req, res) => {
     try {
@@ -56,27 +56,27 @@ router.get('/stats', async (req, res) => {
             Ingredient.count()
         ]);
 
-        // Revenue
+        // Tính tổng doanh thu
         const revenueResult = await Order.findOne({
             attributes: [[Sequelize.fn('SUM', Sequelize.col('totalPrice')), 'total']],
             where: { status: { [Op.ne]: 'Đã hủy' } }
         });
         const revenue = revenueResult?.dataValues?.total || 0;
 
-        // Orders by status
+        // Thống kê đơn hàng theo trạng thái
         const ordersByStatus = await Order.findAll({
             attributes: ['status', [Sequelize.fn('COUNT', Sequelize.col('id')), 'count']],
             group: ['status']
         });
 
-        // Recent orders
+        // Lấy 5 đơn hàng gần đây nhất
         const recentOrders = await Order.findAll({
             order: [['created_at', 'DESC']],
             limit: 5,
             include: [{ model: User, attributes: ['fullName', 'email'] }]
         });
 
-        // New users today
+        // Thống kê số lượng người dùng đăng ký mới trong ngày hôm nay
         const today = new Date();
         today.setHours(0, 0, 0, 0);
         const newUsersToday = await User.count({
@@ -94,7 +94,7 @@ router.get('/stats', async (req, res) => {
 });
 
 // ─────────────────────────────────────────────
-// USERS MANAGEMENT
+// QUẢN LÝ TÀI KHOẢN NGƯỜI DÙNG (USERS)
 // ─────────────────────────────────────────────
 router.get('/users', async (req, res) => {
     try {
@@ -147,7 +147,7 @@ router.delete('/users/:id', async (req, res) => {
 });
 
 // ─────────────────────────────────────────────
-// ORDERS MANAGEMENT
+// QUẢN LÝ ĐƠN HÀNG SIÊU THỊ (ORDERS)
 // ─────────────────────────────────────────────
 router.get('/orders', async (req, res) => {
     try {
@@ -192,7 +192,7 @@ router.patch('/orders/:id/status', async (req, res) => {
 });
 
 // ─────────────────────────────────────────────
-// RECIPES MANAGEMENT
+// QUẢN LÝ CÔNG THỨC NẤU ĂN (RECIPES)
 // ─────────────────────────────────────────────
 router.get('/recipes', async (req, res) => {
     try {
@@ -219,7 +219,7 @@ router.delete('/recipes/:id', async (req, res) => {
     try {
         const recipe = await Recipe.findByPk(req.params.id);
         if (!recipe) return res.status(404).json({ error: 'Recipe not found' });
-        // Cascade deletes steps, ingredients, reviews, nutrition
+        // Tự động xóa liên đới (cascade) các bảng bước nấu, dinh dưỡng, đánh giá, yêu thích liên quan
         await RecipeStep.destroy({ where: { recipe_id: recipe.id } });
         await NutritionFact.destroy({ where: { recipe_id: recipe.id } });
         await Review.destroy({ where: { recipe_id: recipe.id } });
@@ -230,7 +230,7 @@ router.delete('/recipes/:id', async (req, res) => {
 });
 
 // ─────────────────────────────────────────────
-// POSTS MANAGEMENT
+// QUẢN LÝ BÀI ĐĂNG CỘNG ĐỒNG (POSTS)
 // ─────────────────────────────────────────────
 router.get('/posts', async (req, res) => {
     try {
@@ -260,7 +260,7 @@ router.delete('/posts/:id', async (req, res) => {
 });
 
 // ─────────────────────────────────────────────
-// REVIEWS MANAGEMENT
+// QUẢN LÝ ĐÁNH GIÁ CÔNG THỨC (REVIEWS)
 // ─────────────────────────────────────────────
 router.get('/reviews', async (req, res) => {
     try {
@@ -288,7 +288,7 @@ router.delete('/reviews/:id', async (req, res) => {
 });
 
 // ─────────────────────────────────────────────
-// RECIPE METADATA & CREATION 
+// METADATA & KHỞI TẠO CÔNG THỨC
 // ─────────────────────────────────────────────
 const { DietType, RecipeCategory, RecipeDietType, RecipeIngredient } = require('../models');
 
@@ -425,7 +425,7 @@ router.post('/recipes', upload.fields([{name: 'image', maxCount: 1}, {name: 'vid
     const t = await sequelize.transaction();
     try {
         let data = req.body;
-        // If uploading via multipart, structured data might be stringified in a generic "data" field
+        // Nếu tải lên qua multipart, dữ liệu dạng cấu trúc có thể được truyền dưới dạng chuỗi trong trường "data"
         if (req.body.data) {
             data = JSON.parse(req.body.data);
         }
@@ -443,7 +443,7 @@ router.post('/recipes', upload.fields([{name: 'image', maxCount: 1}, {name: 'vid
             videoUrl = `/videos/${v.filename}`;
         }
         
-        // 1. Create Base Recipe
+        // 1. Tạo bản ghi thông tin công thức cơ bản
         const recipe = await Recipe.create({
             title: data.title,
             description: data.description,
@@ -453,12 +453,12 @@ router.post('/recipes', upload.fields([{name: 'image', maxCount: 1}, {name: 'vid
             difficulty: data.difficulty,
             servings: data.servings,
             calories: data.calories,
-            // primary category/diet type
+            // Thiết lập danh mục và chế độ ăn uống mặc định (lấy phần tử đầu tiên)
             category_id: data.categoryIds && data.categoryIds.length > 0 ? data.categoryIds[0] : null,
             diet_type_id: data.dietTypeIds && data.dietTypeIds.length > 0 ? data.dietTypeIds[0] : null,
         }, { transaction: t });
 
-        // 2. Nutrition Facts
+        // 2. Thêm thông tin dinh dưỡng chi tiết
         if (data.nutritionFacts) {
             await NutritionFact.create({
                 recipe_id: recipe.id,
@@ -490,7 +490,7 @@ router.post('/recipes', upload.fields([{name: 'image', maxCount: 1}, {name: 'vid
             await RecipeDietType.bulkCreate(dietMappings, { transaction: t });
         }
 
-        // 5. Recipe Steps
+        // 5. Khởi tạo danh sách các bước nấu ăn tương ứng
         if (data.steps && data.steps.length > 0) {
             const stepObjs = data.steps.map((step, idx) => ({
                 recipe_id: recipe.id,
@@ -503,13 +503,13 @@ router.post('/recipes', upload.fields([{name: 'image', maxCount: 1}, {name: 'vid
             await RecipeStep.bulkCreate(stepObjs, { transaction: t });
         }
 
-        // 6. Recipe Ingredients
+        // 6. Liên kết nguyên liệu với công thức món ăn
         if (data.ingredients && data.ingredients.length > 0) {
             const ingObjs = [];
             for (const ing of data.ingredients) {
                 let ingId = ing.ingredientId;
                 
-                // If ingredientId is 0 or null but we have a name, search or create it!
+                // Nếu không có mã ID nguyên liệu nhưng có tên nguyên liệu, tự động tìm hoặc tạo mới trong danh mục Khác
                 if (!ingId && ing.ingredientName) {
                     const [newIng] = await Ingredient.findOrCreate({
                         where: { name: ing.ingredientName },

@@ -430,14 +430,37 @@ Chạy `node seed.js` sẽ tạo sẵn:
 
 ---
 
-## 👨‍💻 Thành Viên Nhóm
+## 👨‍💻 Thành Viên Nhóm & Phân Công Công Việc
 
-| STT | Họ và Tên | MSSV | Vai trò |
-|-----|-----------|------|---------|
-| 1 | Nguyễn Khắc Trí | B22DCAT303 | Trưởng nhóm — Video, Cooking Mode, Database, Backend |
+### Danh sách thành viên
+
+| STT | Họ và Tên | MSSV | Vai trò chính |
+|-----|-----------|------|---------------|
+| 1 | Nguyễn Khắc Trí | B22DCAT303 | **Trưởng nhóm** — Database, Backend, Video, Cooking Mode, Chef AI Chatbot, Admin Panel |
 | 2 | Phạm Đức Quân | — | Công thức, Tìm kiếm, Lọc danh mục |
 | 3 | Phạm Minh Tâm | — | Mua sắm, Dinh dưỡng, Tích hợp API |
 | 4 | Lê Tiến Dương | — | Yêu thích, Đánh giá, Cộng đồng |
+
+### Bảng phân công chi tiết (Bổ sung Chef AI & Admin Panel)
+
+| STT | Tên chức năng | Nội dung chức năng | Người phụ trách | Nhiệm vụ chính |
+|:---:|:---|:---|:---|:---|
+| 1 | Cung cấp công thức nấu ăn | Hiển thị danh sách và chi tiết công thức nấu ăn | Phạm Đức Quân | Thiết kế dữ liệu công thức, màn hình danh sách và chi tiết món ăn |
+| 2 | Video hướng dẫn | Video hướng dẫn từng bước nấu ăn | Nguyễn Khắc Trí | Tích hợp và quản lý video hướng dẫn (đồng bộ timeline) |
+| 3 | Tính năng lập danh sách mua sắm | Tạo danh sách nguyên liệu cần mua | Phạm Minh Tâm | Xây dựng chức năng tạo, chỉnh sửa danh sách mua sắm |
+| 4 | Tìm kiếm công thức | Tìm kiếm theo tên món, nguyên liệu, thời gian | Phạm Đức Quân | Thiết kế giao diện và xử lý logic tìm kiếm |
+| 5 | Lọc công thức theo chế độ ăn uống | Lọc theo ăn kiêng, dị ứng | Phạm Đức Quân | Xử lý logic lọc và hiển thị kết quả |
+| 6 | Chế độ xem công thức | Chế độ xem chi tiết các bước khi đang nấu ăn | Nguyễn Khắc Trí | Thiết kế giao diện Cooking Mode (dạng slide) |
+| 7 | Lưu công thức yêu thích | Lưu và quản lý công thức yêu thích | Lê Tiến Dương | Xây dựng chức năng lưu, xóa, quản lý yêu thích |
+| 8 | Chia sẻ công thức | Chia sẻ qua mạng xã hội hoặc email | Lê Tiến Dương | Tích hợp chức năng chia sẻ hệ thống |
+| 9 | Góp ý và đánh giá công thức | Đánh giá sao và bình luận | Lê Tiến Dương | Xây dựng hệ thống đánh giá và góp ý |
+| 10 | Tùy chỉnh công thức | Điều chỉnh nguyên liệu theo số người ăn | Phạm Minh Tâm | Xây dựng logic tính toán định lượng |
+| 11 | Thông tin dinh dưỡng | Hiển thị calo và thành phần dinh dưỡng | Phạm Minh Tâm | Thiết kế dữ liệu và giao diện dinh dưỡng |
+| 12 | Hẹn giờ nấu | Hẹn giờ cho từng bước nấu | Nguyễn Khắc Trí | Xây dựng chức năng hẹn giờ và thông báo rung/chuông |
+| 13 | Cộng đồng người dùng | Diễn đàn thảo luận, chia sẻ kinh nghiệm | Lê Tiến Dương | Thiết kế diễn đàn, bài viết, bình luận |
+| 14 | Tích hợp mua sắm | Liên kết dịch vụ giao hàng nguyên liệu | Phạm Minh Tâm | Tích hợp API dịch vụ mua sắm siêu thị |
+| 15 | **Trợ lý ảo Chef AI** | Trò chuyện tư vấn ẩm thực & gợi ý món ăn | **Nguyễn Khắc Trí** | Xây dựng giao diện chat, tích hợp API Gemini & LLaMA-3.3, xử lý logic chatbot & Smart Fridge |
+| 16 | **Quản trị (Admin Panel)** | Thống kê doanh thu, CRUD công thức, quản lý đơn hàng/người dùng/nội dung | **Nguyễn Khắc Trí** | Thiết kế giao diện Web Admin, API quản trị, tích hợp VNPay và xóa cascade bài đăng |
 
 ---
 

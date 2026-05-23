@@ -40,7 +40,6 @@ public class MainActivity extends AppCompatActivity {
 
         // Initialise DB & seed data
         AppDatabase db = AppDatabase.getDatabase(this);
-        DatabaseInitializer.populateAsync(db);
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             androidx.core.graphics.Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -71,20 +70,24 @@ public class MainActivity extends AppCompatActivity {
         if (rvCategories != null) {
             LinearLayoutManager llm = new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false);
             rvCategories.setLayoutManager(llm);
-
-            Executors.newSingleThreadExecutor().execute(() -> {
-                List<CategoryEntity> cats = db.recipeDao().getAllCategories();
-                runOnUiThread(() -> {
-                    CategoryAdapter adapter = new CategoryAdapter(cats, cat -> {
-                        Intent intent = new Intent(this, RecipeListActivity.class);
-                        intent.putExtra("category_id",   cat.id);
-                        intent.putExtra("category_name", cat.name);
-                        startActivity(intent);
-                    });
-                    rvCategories.setAdapter(adapter);
-                });
-            });
         }
+
+        DatabaseInitializer.populateAsync(db, () -> {
+            if (rvCategories != null) {
+                Executors.newSingleThreadExecutor().execute(() -> {
+                    List<CategoryEntity> cats = db.recipeDao().getAllCategories();
+                    runOnUiThread(() -> {
+                        CategoryAdapter adapter = new CategoryAdapter(cats, cat -> {
+                            Intent intent = new Intent(this, RecipeListActivity.class);
+                            intent.putExtra("category_id",   cat.id);
+                            intent.putExtra("category_name", cat.name);
+                            startActivity(intent);
+                        });
+                        rvCategories.setAdapter(adapter);
+                    });
+                });
+            }
+        });
 
         // ── "Xem tất cả" link ─────────────────────────────────────────────
         TextView tvViewAll = findViewById(R.id.tv_view_all);
