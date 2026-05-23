@@ -9,3 +9,5 @@ const sequelize = new Sequelize({
 });
 
 module.exports = sequelize;
+
+// Cập nhật
