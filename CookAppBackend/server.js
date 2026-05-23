@@ -107,3 +107,5 @@ sequelize.sync().then(() => {
 }).catch(err => {
     console.error('Failed to sync database:', err);
 });
+
+// Cập nhật
