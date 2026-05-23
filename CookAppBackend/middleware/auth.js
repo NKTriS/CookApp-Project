@@ -45,3 +45,5 @@ module.exports = {
     optionalAuthenticateToken,
     JWT_SECRET
 };
+
+// Cập nhật
