@@ -24,3 +24,5 @@ androidx-recyclerview = { group = "androidx.recyclerview", name = "recyclerview"
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }
 
+
+# Cập nhật
