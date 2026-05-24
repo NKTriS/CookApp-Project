@@ -492,11 +492,7 @@ async function editSteps(id, title) {
             });
         }
         html += `</div>
-                 <div style="margin-top:20px; display:flex; justify-content:space-between; align-items:center;">
-                    <div>
-                        ${steps.length > 0 ? `<button class="btn btn-outline" id="btn_auto_sync" onclick="autoSyncVideo(${id})" style="border-color:#b91c1c; color:#b91c1c; font-weight:600;">✨ Tự động bằng AI (Gemini)</button>
-                        <span id="sync_status" style="margin-left:10px; font-size:13px; color:#666;"></span>` : ''}
-                    </div>
+                 <div style="margin-top:20px; display:flex; justify-content:flex-end; align-items:center;">
                     <div style="display:flex; gap:10px;">
                         <button class="btn btn-outline" onclick="closeAdminModal()">Hủy</button>
                         ${steps.length > 0 ? `<button class="btn btn-primary" onclick="saveSteps(${id}, [${steps.map(s => s.id).join(',')}])">Lưu mốc thời gian</button>` : ''}
@@ -506,36 +502,6 @@ async function editSteps(id, title) {
     } catch (e) { toast(e.message, 'error'); }
 }
 
-async function autoSyncVideo(recipeId) {
-    const btn = document.getElementById('btn_auto_sync');
-    const status = document.getElementById('sync_status');
-    btn.disabled = true;
-    btn.style.opacity = '0.5';
-    status.innerText = 'Đang phân tích video (có thể mất 1-2 phút)... Vui lòng không đóng cửa sổ!';
-    
-    try {
-        const res = await apiFetch(`/api/admin/recipes/${recipeId}/auto-sync-video`, {
-            method: 'POST'
-        });
-        
-        status.innerText = '✅ Phân tích hoàn tất!';
-        toast('Đồng bộ bằng AI thành công!', 'success');
-        
-        // Auto-fill inputs
-        if (res.data && Array.isArray(res.data)) {
-            res.data.forEach(item => {
-                const input = document.getElementById(`step_time_${item.id}`);
-                if (input) input.value = item.video_start_time;
-            });
-        }
-    } catch (e) {
-        status.innerText = '❌ Lỗi: ' + e.message;
-        toast('Trục trặc AI: ' + e.message, 'error');
-    } finally {
-        btn.disabled = false;
-        btn.style.opacity = '1';
-    }
-}
 
 async function saveSteps(recipeId, stepIds) {
     const payloadSteps = stepIds.map(id => ({

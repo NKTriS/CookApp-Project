@@ -1,6 +1,5 @@
 const express = require('express');
 const router = express.Router();
-const { GoogleGenerativeAI } = require('@google/generative-ai');
 const Groq = require('groq-sdk');
 const {
     Recipe, Category, Ingredient, NutritionFact, Favorite
@@ -8,11 +7,8 @@ const {
 const { authenticateToken } = require('../middleware/auth');
 
 // ─────────────────────────────────────────────
-// CHATBOT AI (Ưu tiên Groq + Dự phòng Gemini nếu lỗi)
+// CHATBOT AI (Sử dụng Groq)
 // ─────────────────────────────────────────────
-
-const GEMINI_API_KEY = process.env.GEMINI_API_KEY || '';
-const genAI = new GoogleGenerativeAI(GEMINI_API_KEY);
 
 const GROQ_API_KEY = process.env.GROQ_API_KEY || '';
 const groq = new Groq({ apiKey: GROQ_API_KEY });
@@ -85,32 +81,17 @@ async function chatWithGroq(systemPrompt, message, history) {
     return c.choices[0]?.message?.content || 'Xin lỗi, tôi không hiểu.';
 }
 
-async function chatWithGemini(systemPrompt, message, history) {
-    const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
-    const h = (history || []).map(x => ({ role: x.role === 'user' ? 'user' : 'model', parts: [{ text: x.content }] }));
-    const chat = model.startChat({ history: [
-        { role: 'user', parts: [{ text: systemPrompt }] },
-        { role: 'model', parts: [{ text: 'Vâng, tôi là Chef AI! 🍳' }] }, ...h
-    ]});
-    const result = await chat.sendMessage(message);
-    return result.response.text();
-}
-
 router.post('/chat', authenticateToken, async (req, res) => {
     try {
         const { message, history } = req.body;
         if (!message) return res.status(400).json({ error: 'Thiếu tin nhắn người dùng' });
-        const systemPrompt = await buildSystemPrompt(req.user.id);
-        let reply = '';
-        try {
-            if (GROQ_API_KEY) {
-                reply = await chatWithGroq(systemPrompt, message, history);
-            } else { throw new Error('Chưa cấu hình khóa API Groq'); }
-        } catch (groqErr) {
-            console.log('Groq lỗi:', groqErr.message, '-> chuyển sang gọi Gemini');
-            try { reply = await chatWithGemini(systemPrompt, message, history); }
-            catch (geminiErr) { return res.status(500).json({ error: 'Trợ lý AI đang bận, vui lòng thử lại sau!' }); }
+        
+        if (!GROQ_API_KEY) {
+            return res.status(500).json({ error: 'Chưa cấu hình khóa API Groq' });
         }
+
+        const systemPrompt = await buildSystemPrompt(req.user.id);
+        const reply = await chatWithGroq(systemPrompt, message, history);
         res.json({ reply });
     } catch (e) { res.status(500).json({ error: 'Lỗi hệ thống AI: ' + e.message }); }
 });

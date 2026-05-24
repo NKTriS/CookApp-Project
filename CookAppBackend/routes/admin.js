@@ -11,8 +11,6 @@ const { adminAuth } = require('../middleware/adminAuth');
 const multer = require('multer');
 const path = require('path');
 const fs = require('fs');
-const { GoogleGenerativeAI } = require('@google/generative-ai');
-const { GoogleAIFileManager } = require('@google/generative-ai/server');
 
 // Đảm bảo các thư mục lưu trữ tĩnh tồn tại
 const imageDest = path.join(__dirname, '..', 'public', 'videos', 'thumbnails');
@@ -331,93 +329,7 @@ router.put('/recipes/:id/steps', async (req, res) => {
 });
 
 router.post('/recipes/:id/auto-sync-video', async (req, res) => {
-    try {
-        const recipeId = req.params.id;
-        const recipe = await Recipe.findByPk(recipeId);
-        if (!recipe) return res.status(404).json({ error: "Recipe not found" });
-
-        const steps = await RecipeStep.findAll({
-            where: { recipe_id: recipeId },
-            order: [['step_number', 'ASC']]
-        });
-        if (steps.length === 0) return res.status(400).json({ error: "Recipe has no steps" });
-
-        let videoUrl = recipe.video_url;
-        if (!videoUrl) return res.status(400).json({ error: "Recipe has no video" });
-
-        // Phân tích xem video có phải là mp4 cục bộ không
-        // VD: http://10.0.2.2:3000/videos/ga_xao_xa_ot.mp4
-        let localPath = "";
-        if (videoUrl.includes('/videos/') && videoUrl.endsWith('.mp4')) {
-            const fileName = videoUrl.split('/videos/').pop();
-            localPath = path.join(__dirname, '../public/videos/', fileName);
-        } else {
-             return res.status(400).json({ error: "Chỉ hỗ trợ video MP4 cục bộ được upload." });
-        }
-
-        if (!fs.existsSync(localPath)) return res.status(404).json({ error: "Video file not found on disk: " + localPath });
-
-        const fileManager = new GoogleAIFileManager(process.env.GEMINI_API_KEY);
-        const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-
-        console.log("Uploading to Gemini File API...");
-        const uploadResult = await fileManager.uploadFile(localPath, {
-            mimeType: 'video/mp4',
-            displayName: recipe.title,
-        });
-
-        // Chờ Gemini xử lý video xong
-        let fileInfo = await fileManager.getFile(uploadResult.file.name);
-        let maxWait = 0;
-        while (fileInfo.state === 'PROCESSING' && maxWait < 120) {
-            console.log('Waiting for video processing...');
-            await new Promise(r => setTimeout(r, 2000));
-            fileInfo = await fileManager.getFile(uploadResult.file.name);
-            maxWait += 2;
-        }
-
-        if (fileInfo.state === 'FAILED') throw new Error('Video processing on Gemini failed');
-
-        const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
-
-        const stepDataForPrompt = steps.map(s => ({ id: s.id, number: s.step_number, text: s.instruction }));
-
-        const prompt = `You are a culinary temporal-sync agent. Analyze this video for the recipe "${recipe.title}". 
-Map the following instructional steps to the EXACT second they begin in the video.
-Steps:
-${JSON.stringify(stepDataForPrompt, null, 2)}
-
-Return purely a JSON array of objects without any markdown blocks. Format: [ { "id": number, "video_start_time": number } ]`;
-
-        console.log("Requesting generation...");
-        let result = await model.generateContent([
-            { fileData: { mimeType: uploadResult.file.mimeType, fileUri: uploadResult.file.uri } },
-            { text: prompt }
-        ]);
-
-        let responseText = result.response.text();
-        // Xóa block markdown (nếu có)
-        responseText = responseText.replace(/```json/g, '').replace(/```/g, '').trim();
-        const jsonResult = JSON.parse(responseText);
-
-        // Lưu vào database
-        for (const item of jsonResult) {
-            if (item.id && typeof item.video_start_time === 'number') {
-                await RecipeStep.update(
-                    { video_start_time: item.video_start_time },
-                    { where: { id: item.id, recipe_id: recipeId } }
-                );
-            }
-        }
-
-        // Dọn dẹp
-        await fileManager.deleteFile(uploadResult.file.name);
-
-        res.json({ success: true, message: "Đồng bộ thành công", data: jsonResult });
-    } catch (e) {
-        console.error("Auto Sync Error:", e);
-        res.status(500).json({ error: e.message });
-    }
+    res.status(400).json({ error: "Tính năng tự động đồng bộ video qua Gemini đã bị gỡ bỏ." });
 });
 
 router.post('/recipes', upload.fields([{name: 'image', maxCount: 1}, {name: 'video', maxCount: 1}]), async (req, res) => {
