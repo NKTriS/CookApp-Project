@@ -3,4 +3,4 @@ plugins {
     alias(libs.plugins.android.application) apply false
 }
 
-# Cập nhật
+// Cập nhật

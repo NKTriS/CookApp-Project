@@ -93,4 +93,4 @@ if "%OS%"=="Windows_NT" endlocal
 
 :omega
 
-# Cập nhật
+@rem Cập nhật

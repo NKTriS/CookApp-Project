@@ -23,4 +23,4 @@ dependencyResolutionManagement {
 rootProject.name = "Cookapp"
 include(":app")
 
-# Cập nhật
+// Cập nhật
