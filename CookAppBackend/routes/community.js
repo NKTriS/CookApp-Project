@@ -189,4 +189,39 @@ router.post('/posts/:id/save', authenticateToken, async (req, res) => {
     } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
+// PUT /api/community/comments/:id — edit a comment
+router.put('/comments/:id', authenticateToken, async (req, res) => {
+    try {
+        const { content } = req.body;
+        if (!content) return res.status(400).json({ error: 'content is required' });
+
+        const comment = await PostComment.findByPk(req.params.id);
+        if (!comment) return res.status(404).json({ error: 'Comment not found' });
+
+        if (comment.user_id !== req.user.id) {
+            return res.status(403).json({ error: 'You are not allowed to edit this comment' });
+        }
+
+        comment.content = content;
+        await comment.save();
+
+        res.json(comment);
+    } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
+// DELETE /api/community/comments/:id — delete a comment
+router.delete('/comments/:id', authenticateToken, async (req, res) => {
+    try {
+        const comment = await PostComment.findByPk(req.params.id);
+        if (!comment) return res.status(404).json({ error: 'Comment not found' });
+
+        if (comment.user_id !== req.user.id) {
+            return res.status(403).json({ error: 'You are not allowed to delete this comment' });
+        }
+
+        await comment.destroy();
+        res.json({ success: true, message: 'Comment deleted successfully' });
+    } catch (e) { res.status(500).json({ error: e.message }); }
+});
+
 module.exports = router;
