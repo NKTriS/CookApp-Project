@@ -115,6 +115,12 @@ public interface ApiService {
     @POST("api/community/posts/{id}/comments")
     Call<PostDto.CommentDto> addComment(@Path("id") int postId, @Body PostDto.CommentDto comment);
 
+    @PUT("api/community/comments/{id}")
+    Call<PostDto.CommentDto> updateComment(@Path("id") int commentId, @Body PostDto.CommentDto comment);
+
+    @DELETE("api/community/comments/{id}")
+    Call<GenericResponse> deleteComment(@Path("id") int commentId);
+
     @POST("api/community/posts/{id}/like")
     Call<com.example.cookapp.api.dto.ToggleLikeResponse> toggleLike(@Path("id") int postId);
 

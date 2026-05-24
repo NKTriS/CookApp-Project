@@ -35,6 +35,7 @@ public class PostDetailActivity extends AppCompatActivity {
     private EditText etComment;
     private CommentAdapter adapter;
     private final List<Comment> commentsList = new ArrayList<>();
+    private Comment editingComment = null;
 
     private int likesCount   = 0;
     private int currentPostId = -1;
@@ -81,13 +82,16 @@ public class PostDetailActivity extends AppCompatActivity {
         adapter = new CommentAdapter(commentsList, new CommentAdapter.OnCommentAction() {
             @Override
             public void onEdit(Comment comment) {
-                if (etComment != null) etComment.setText(comment.getText());
+                editingComment = comment;
+                if (etComment != null) {
+                    etComment.setText(comment.getText());
+                    etComment.setSelection(comment.getText().length());
+                    etComment.requestFocus();
+                }
             }
             @Override
             public void onDelete(String commentId) {
-                commentsList.removeIf(c -> c.getId().equals(commentId));
-                adapter.notifyDataSetChanged();
-                updateCommentCount();
+                deleteComment(commentId);
             }
         });
 
@@ -105,7 +109,13 @@ public class PostDetailActivity extends AppCompatActivity {
                 }
                 if (currentPostId == -1) return;
                 String text = etComment != null ? etComment.getText().toString().trim() : "";
-                if (!text.isEmpty()) postComment(text);
+                if (!text.isEmpty()) {
+                    if (editingComment != null) {
+                        updateComment(editingComment, text);
+                    } else {
+                        postComment(text);
+                    }
+                }
             });
         }
 
@@ -266,6 +276,70 @@ public class PostDetailActivity extends AppCompatActivity {
             public void onFailure(Call<PostDto.CommentDto> call, Throwable t) {
                 runOnUiThread(() -> Toast.makeText(PostDetailActivity.this,
                     "Mất kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show());
+            }
+        });
+    }
+
+    private void updateComment(Comment comment, String text) {
+        PostDto.CommentDto dto = new PostDto.CommentDto();
+        dto.content = text;
+
+        int commentId = Integer.parseInt(comment.getId());
+        apiService.updateComment(commentId, dto).enqueue(new Callback<PostDto.CommentDto>() {
+            @Override
+            public void onResponse(Call<PostDto.CommentDto> call, Response<PostDto.CommentDto> response) {
+                if (response.isSuccessful() && response.body() != null) {
+                    PostDto.CommentDto updatedDto = response.body();
+                    runOnUiThread(() -> {
+                        if (etComment != null) etComment.getText().clear();
+                        editingComment = null; // Clear edit mode
+                        
+                        // Find and update comment in list
+                        for (int i = 0; i < commentsList.size(); i++) {
+                            if (commentsList.get(i).getId().equals(comment.getId())) {
+                                commentsList.get(i).setText(updatedDto.content);
+                                adapter.notifyItemChanged(i);
+                                break;
+                            }
+                        }
+                        Toast.makeText(PostDetailActivity.this, "Đã cập nhật bình luận!", Toast.LENGTH_SHORT).show();
+                    });
+                } else {
+                    runOnUiThread(() -> Toast.makeText(PostDetailActivity.this,
+                        "Lỗi cập nhật bình luận", Toast.LENGTH_SHORT).show());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<PostDto.CommentDto> call, Throwable t) {
+                runOnUiThread(() -> Toast.makeText(PostDetailActivity.this,
+                    "Mất kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show());
+            }
+        });
+    }
+
+    private void deleteComment(String commentId) {
+        int idVal = Integer.parseInt(commentId);
+        apiService.deleteComment(idVal).enqueue(new Callback<GenericResponse>() {
+            @Override
+            public void onResponse(Call<GenericResponse> call, Response<GenericResponse> response) {
+                if (response.isSuccessful()) {
+                    runOnUiThread(() -> {
+                        commentsList.removeIf(c -> c.getId().equals(commentId));
+                        adapter.notifyDataSetChanged();
+                        updateCommentCount();
+                        Toast.makeText(PostDetailActivity.this, "Đã xóa bình luận!", Toast.LENGTH_SHORT).show();
+                    });
+                } else {
+                    runOnUiThread(() -> Toast.makeText(PostDetailActivity.this,
+                        "Không thể xóa bình luận", Toast.LENGTH_SHORT).show());
+                }
+            }
+
+            @Override
+            public void onFailure(Call<GenericResponse> call, Throwable t) {
+                runOnUiThread(() -> Toast.makeText(PostDetailActivity.this,
+                    "Lỗi mạng: " + t.getMessage(), Toast.LENGTH_SHORT).show());
             }
         });
     }
