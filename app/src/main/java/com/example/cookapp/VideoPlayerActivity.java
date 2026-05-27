@@ -12,8 +12,11 @@ import androidx.media3.exoplayer.ExoPlayer;
 import androidx.media3.ui.PlayerView;
 
 /**
- * Lightweight Activity for video playback — same pattern as CookingModeActivity.
- * Opens in landscape fullscreen with ExoPlayer controls.
+ * Màn hình phát video nấu ăn độc lập.
+ *
+ * Activity này nhận video_url từ Intent, mở trình phát ở chế độ ngang toàn màn hình
+ * và dùng ExoPlayer để phát video hướng dẫn. Màn hình này phục vụ chức năng
+ * "Video nấu ăn" khi người dùng muốn xem video đầy đủ ngoài chế độ Cooking Mode.
  */
 public class VideoPlayerActivity extends AppCompatActivity {
 
@@ -25,33 +28,33 @@ public class VideoPlayerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         
-        // Fullscreen landscape — like YouTube
+        // Ép toàn màn hình và xoay ngang để trải nghiệm xem video giống trình phát chuyên dụng.
         getWindow().setFlags(
             WindowManager.LayoutParams.FLAG_FULLSCREEN,
             WindowManager.LayoutParams.FLAG_FULLSCREEN);
         setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
         
-        // Simple layout: just a PlayerView
+        // Tạo PlayerView bằng code vì màn hình này chỉ cần một trình phát video toàn màn hình.
         playerView = new PlayerView(this);
         playerView.setLayoutParams(new android.view.ViewGroup.LayoutParams(
             android.view.ViewGroup.LayoutParams.MATCH_PARENT,
             android.view.ViewGroup.LayoutParams.MATCH_PARENT));
         setContentView(playerView);
         
-        // Immersive fullscreen
+        // Ẩn thanh trạng thái và thanh điều hướng Android để video chiếm trọn màn hình.
         getWindow().getDecorView().setSystemUiVisibility(
               View.SYSTEM_UI_FLAG_FULLSCREEN
             | View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
             | View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY);
         
-        // Get video URL from intent
+        // Lấy đường dẫn video từ Intent; nếu thiếu URL thì đóng màn hình để tránh player rỗng.
         String videoUrl = getIntent().getStringExtra("video_url");
         if (videoUrl == null || videoUrl.isEmpty()) {
             finish();
             return;
         }
         
-        // ═══ EXACT SAME code as CookingModeActivity.initializePlayer() ═══
+        // Cấu hình luồng âm thanh media và bộ đệm phát video cho ExoPlayer.
         setVolumeControlStream(android.media.AudioManager.STREAM_MUSIC);
         
         DefaultLoadControl loadControl = new DefaultLoadControl.Builder()
@@ -70,6 +73,7 @@ public class VideoPlayerActivity extends AppCompatActivity {
         player.setVolume(1.0f);
         playerView.setPlayer(player);
         
+        // MediaItem là đối tượng đại diện cho URL video mà ExoPlayer sẽ tải và phát.
         MediaItem mediaItem = MediaItem.fromUri(videoUrl);
         
         player.addListener(new androidx.media3.common.Player.Listener() {
@@ -79,10 +83,7 @@ public class VideoPlayerActivity extends AppCompatActivity {
                     androidx.media3.common.Player.PositionInfo newPosition,
                     int reason) {
                 if (reason == androidx.media3.common.Player.DISCONTINUITY_REASON_SEEK) {
-                    // CÁCH TRIỆT ĐỂ 100%: 
-                    // Khi thanh tua được nhả ra, phần cứng Android bị crash audio. 
-                    // Ta KHÔNG báo lỗi, mà lập tức ép Player "prepare" (khởi động) lại toàn bộ bộ giải mã
-                    // từ đúng vị trí vừa tua tới! Thao tác này mất ~0.1s và sẽ gõ thức AudioTrack.
+                    // Sau thao tác tua, prepare lại player để đồng bộ bộ giải mã âm thanh/video.
                     player.prepare();
                     player.setVolume(1.0f);
                 }
@@ -94,7 +95,7 @@ public class VideoPlayerActivity extends AppCompatActivity {
         player.setVolume(1.0f);
         player.setPlayWhenReady(true);
         
-        // Back button → close
+        // Nút fullscreen/back trên PlayerView được dùng như nút đóng màn hình video.
         playerView.setFullscreenButtonClickListener(isFullScreen -> finish());
     }
 

@@ -35,6 +35,12 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+/**
+ * Fragment quản lý người dùng trong Admin Panel.
+ *
+ * Fragment này hỗ trợ tìm kiếm người dùng, đổi vai trò user/admin và xóa tài khoản.
+ * Các thao tác đều gọi API admin và yêu cầu token có quyền quản trị.
+ */
 public class AdminUsersFragment extends Fragment implements AdminUserAdapter.OnUserActionListener {
 
     private RecyclerView rvUsers;
@@ -69,6 +75,7 @@ public class AdminUsersFragment extends Fragment implements AdminUserAdapter.OnU
             @Override public void onTextChanged(CharSequence s, int st, int b, int c) {}
             @Override
             public void afterTextChanged(Editable s) {
+                // Debounce 400ms để tránh gọi API liên tục trong lúc admin đang gõ tìm kiếm.
                 if (searchRunnable != null) searchHandler.removeCallbacks(searchRunnable);
                 searchRunnable = () -> loadUsers(s.toString().trim());
                 searchHandler.postDelayed(searchRunnable, 400);
@@ -86,6 +93,9 @@ public class AdminUsersFragment extends Fragment implements AdminUserAdapter.OnU
         }
     }
 
+    /**
+     * Gọi API GET /api/admin/users để tải danh sách người dùng theo từ khóa tìm kiếm.
+     */
     private void loadUsers(String search) {
         progressBar.setVisibility(View.VISIBLE);
         tvEmpty.setVisibility(View.GONE);
@@ -111,6 +121,9 @@ public class AdminUsersFragment extends Fragment implements AdminUserAdapter.OnU
         });
     }
 
+    /**
+     * Đổi vai trò người dùng giữa user và admin bằng API PATCH /api/admin/users/{id}/role.
+     */
     @Override
     public void onToggleRole(UserDto user) {
         String newRole = "admin".equals(user.role) ? "user" : "admin";
@@ -142,6 +155,10 @@ public class AdminUsersFragment extends Fragment implements AdminUserAdapter.OnU
                 .show();
     }
 
+    /**
+     * Xóa tài khoản người dùng bằng API DELETE /api/admin/users/{id}.
+     * Trước khi xóa có hộp thoại xác nhận vì thao tác này không thể hoàn tác.
+     */
     @Override
     public void onDelete(UserDto user) {
         new AlertDialog.Builder(requireContext())

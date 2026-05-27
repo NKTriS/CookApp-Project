@@ -8,7 +8,7 @@ public class NetworkConfig {
 
     // 2. IP LAN của máy tính dùng để test trên MÁY THẬT qua Wifi
     // (Đổi IP này nếu bạn kết nối Wifi khác)
-    public static final String LAN_IP = "http://192.168.100.236:3000";
+    public static final String LAN_IP = "http://192.168.111.23:3000";
 
     public static String getBaseUrl() {
         boolean emu = isEmulator();

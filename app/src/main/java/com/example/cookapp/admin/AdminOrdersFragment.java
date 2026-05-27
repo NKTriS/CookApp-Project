@@ -32,6 +32,12 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+/**
+ * Fragment quản lý đơn hàng trong Admin Panel.
+ *
+ * Fragment này tải danh sách đơn hàng theo trạng thái, hiển thị bộ lọc dạng chip
+ * và gọi API cập nhật trạng thái giao hàng khi admin thao tác trên từng đơn.
+ */
 public class AdminOrdersFragment extends Fragment {
 
     private RecyclerView rvOrders;
@@ -65,6 +71,10 @@ public class AdminOrdersFragment extends Fragment {
         loadOrders();
     }
 
+    /**
+     * Dựng các chip lọc trạng thái đơn hàng.
+     * Khi chọn một chip, currentFilter được cập nhật rồi gọi lại API danh sách đơn.
+     */
     private void buildChips() {
         chipContainer.removeAllViews();
         int dp = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 1,
@@ -118,6 +128,10 @@ public class AdminOrdersFragment extends Fragment {
         }
     }
 
+    /**
+     * Gọi API GET /api/admin/orders để lấy danh sách đơn hàng.
+     * Tham số status được truyền từ chip lọc để backend chỉ trả về nhóm cần xem.
+     */
     private void loadOrders() {
         progressBar.setVisibility(View.VISIBLE);
         tvEmpty.setVisibility(View.GONE);
@@ -144,6 +158,10 @@ public class AdminOrdersFragment extends Fragment {
         });
     }
 
+    /**
+     * Gọi API PATCH /api/admin/orders/{id}/status để đổi trạng thái đơn hàng.
+     * Sau khi cập nhật thành công, danh sách được tải lại để đồng bộ giao diện.
+     */
     private void onStatusChanged(int orderId, String newStatus) {
         ApiService api = RetrofitClient.getClient(requireContext()).create(ApiService.class);
         Map<String, String> body = new HashMap<>();

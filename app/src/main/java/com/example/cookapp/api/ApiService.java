@@ -39,6 +39,13 @@ import retrofit2.http.Part;
 import okhttp3.RequestBody;
 import okhttp3.ResponseBody;
 
+/**
+ * Khai báo toàn bộ API Retrofit mà ứng dụng Android gọi tới backend CookApp.
+ *
+ * Các annotation @GET, @POST, @PATCH, @DELETE mô tả endpoint tương ứng.
+ * RetrofitClient chịu trách nhiệm cấu hình baseUrl và tự gắn Authorization header
+ * cho những API cần đăng nhập hoặc cần quyền admin.
+ */
 public interface ApiService {
 
     // --- AUTH ---
@@ -74,6 +81,7 @@ public interface ApiService {
     @GET("api/recipes/{id}")
     Call<Recipe> getRecipeDetail(@Path("id") int recipeId);
 
+    /** Lấy các bước nấu, timer_seconds và video_start_time cho Cooking Mode. */
     @GET("api/recipes/{id}/steps")
     Call<List<com.example.cookapp.api.dto.RecipeStepDto>> getRecipeSteps(@Path("id") int recipeId);
 
@@ -173,6 +181,7 @@ public interface ApiService {
     Call<Map<String, List<StoreProductDto>>> checkIngredients(@Body CheckIngredientsRequest request);
 
     // --- AI CHATBOT ---
+    /** Gửi tin nhắn tới Chef AI; backend sẽ gọi Groq API và trả về trường reply. */
     @POST("api/chat")
     Call<ResponseBody> sendChatMessage(@Body RequestBody body);
 
@@ -198,9 +207,11 @@ public interface ApiService {
     Call<com.example.cookapp.api.dto.VnpayUrlResponse> createVnpayUrl(@Body java.util.Map<String, Object> body);
 
     // --- ADMIN ---
+    /** Lấy số liệu tổng quan hiển thị trên dashboard admin. */
     @GET("api/admin/stats")
     Call<com.example.cookapp.api.dto.AdminStatsDto> getAdminStats();
 
+    /** Lấy danh sách đơn hàng, có phân trang và lọc theo trạng thái. */
     @GET("api/admin/orders")
     Call<com.example.cookapp.api.dto.AdminOrdersResponse> getAdminOrders(
         @Query("page") int page,
@@ -208,9 +219,11 @@ public interface ApiService {
         @Query("status") String status
     );
 
+    /** Cập nhật trạng thái xử lý/giao hàng của một đơn hàng. */
     @PATCH("api/admin/orders/{id}/status")
     Call<OrderDto> updateAdminOrderStatus(@Path("id") int orderId, @Body java.util.Map<String, String> body);
 
+    /** Tìm kiếm và lấy danh sách người dùng cho màn hình quản trị. */
     @GET("api/admin/users")
     Call<com.example.cookapp.api.dto.AdminUsersResponse> getAdminUsers(
         @Query("page") int page,
@@ -218,12 +231,15 @@ public interface ApiService {
         @Query("search") String search
     );
 
+    /** Đổi vai trò của người dùng giữa user và admin. */
     @PATCH("api/admin/users/{id}/role")
     Call<GenericResponse> updateUserRole(@Path("id") int userId, @Body java.util.Map<String, String> body);
 
+    /** Xóa tài khoản người dùng khỏi hệ thống. */
     @DELETE("api/admin/users/{id}")
     Call<GenericResponse> deleteUser(@Path("id") int userId);
 
+    /** Lấy danh sách công thức để admin quản lý nội dung. */
     @GET("api/admin/recipes")
     Call<com.example.cookapp.api.dto.AdminRecipesResponse> getAdminRecipes(
         @Query("page") int page,
@@ -252,6 +268,7 @@ public interface ApiService {
     @DELETE("api/admin/reviews/{id}")
     Call<GenericResponse> deleteAdminReview(@Path("id") int reviewId);
 
+    /** Lấy category, diet type và ingredient để dựng form thêm/sửa công thức. */
     @GET("api/admin/recipe-metadata")
     Call<com.example.cookapp.api.dto.RecipeMetadataResponse> getRecipeMetadata();
 
@@ -264,6 +281,7 @@ public interface ApiService {
         @Body com.example.cookapp.api.dto.AdminStepsUpdateRequest request
     );
 
+    /** Tạo công thức mới bằng multipart gồm JSON data, ảnh đại diện và video hướng dẫn. */
     @Multipart
     @POST("api/admin/recipes")
     Call<com.example.cookapp.api.dto.GenericResponse> createRecipe(

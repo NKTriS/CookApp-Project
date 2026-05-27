@@ -31,6 +31,14 @@ import java.util.Locale;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+/**
+ * Màn hình Chế độ nấu ăn.
+ *
+ * Lớp này chịu trách nhiệm tải các bước nấu của một công thức, phát video minh họa,
+ * tự động tua video tới đúng mốc thời gian của từng bước và quản lý bộ hẹn giờ.
+ * Dữ liệu bước nấu được ưu tiên đọc từ Room Database để chạy nhanh, sau đó đồng bộ
+ * lại từ API backend khi cache thiếu thông tin video_start_time.
+ */
 public class CookingModeActivity extends AppCompatActivity {
 
     // ── Giao diện (Views) ────────────────────────────────────────────────
@@ -103,9 +111,19 @@ public class CookingModeActivity extends AppCompatActivity {
     }
 
     // ─────────────────────────────────────────────────────────────────────
+    /**
+     * Tải công thức và danh sách bước nấu theo recipeId.
+     *
+     * Luồng xử lý:
+     * 1. Đọc recipe và recipe_steps từ Room Database ở background thread.
+     * 2. Nếu recipe có video_url thì khởi tạo ExoPlayer để phát video.
+     * 3. Nếu cache bước nấu đã có video_start_time thì dùng ngay.
+     * 4. Nếu cache thiếu dữ liệu đồng bộ video thì gọi API backend để lấy bản mới.
+     */
     private void loadSteps(int recipeId) {
         ExecutorService ex = Executors.newSingleThreadExecutor();
         ex.execute(() -> {
+            // Đọc dữ liệu cục bộ để màn hình mở nhanh và vẫn dùng được khi vừa đồng bộ trước đó.
             RecipeEntity recipe = AppDatabase.getDatabase(this).recipeDao().getRecipeById(recipeId);
             List<RecipeStepEntity> loaded =
                 AppDatabase.getDatabase(this).recipeDao().getStepsByRecipeId(recipeId);
@@ -148,11 +166,19 @@ public class CookingModeActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Gọi API nội bộ GET /api/recipes/{id}/steps để lấy các bước nấu mới nhất.
+     *
+     * Backend trả về step_number, instruction, timer_seconds và video_start_time.
+     * Sau khi nhận phản hồi thành công, dữ liệu được ghi lại vào Room Database để
+     * lần mở sau không cần gọi mạng nếu cache đã đầy đủ.
+     */
     private void loadStepsFromApi(int recipeId) {
         com.example.cookapp.api.ApiService apiService =
             com.example.cookapp.api.RetrofitClient.getClient(this)
                 .create(com.example.cookapp.api.ApiService.class);
 
+        // Retrofit gọi backend bất đồng bộ để không khóa giao diện người dùng.
         apiService.getRecipeSteps(recipeId).enqueue(new retrofit2.Callback<List<com.example.cookapp.api.dto.RecipeStepDto>>() {
             @Override
             public void onResponse(retrofit2.Call<List<com.example.cookapp.api.dto.RecipeStepDto>> call,
@@ -203,6 +229,14 @@ public class CookingModeActivity extends AppCompatActivity {
 
 
     @androidx.media3.common.util.UnstableApi
+    /**
+     * Khởi tạo ExoPlayer để phát video hướng dẫn nấu ăn.
+     *
+     * Hàm này dùng VideoCacheManager làm DataSource có cache, cấu hình bộ đệm để
+     * video phát ổn định hơn, đặt Audio Focus cho luồng media và gắn player vào
+     * PlayerView. Mỗi khi đổi bước, displayStep sẽ thay MediaItem bằng một đoạn
+     * video đã được cắt theo video_start_time.
+     */
     private void initializePlayer(String url) {
         if (playerView != null) {
             playerView.setVisibility(View.VISIBLE);
@@ -280,6 +314,10 @@ public class CookingModeActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Chuyển sang bước trước hoặc bước sau.
+     * Khi đổi bước cần hủy bộ đếm hiện tại để tránh timer của bước cũ tiếp tục chạy.
+     */
     private void navigate(int delta) {
         int next = currentIndex + delta;
         if (next < 0 || next >= steps.size()) return;
@@ -289,6 +327,12 @@ public class CookingModeActivity extends AppCompatActivity {
     }
 
     // ─────────────────────────────────────────────────────────────────────
+    /**
+     * Hiển thị nội dung của bước nấu hiện tại lên giao diện.
+     *
+     * Ngoài việc cập nhật tiêu đề và hướng dẫn, hàm còn nạp timer_seconds,
+     * ẩn/hiện nút điều hướng và tua video theo video_start_time của bước hiện tại.
+     */
     private void displayStep(int index) {
         RecipeStepEntity step = steps.get(index);
         int total = steps.size();
@@ -302,7 +346,7 @@ public class CookingModeActivity extends AppCompatActivity {
         if (tvStepInstructions != null)
             tvStepInstructions.setText(step.instruction);
 
-        // Timer
+        // Timer của từng bước được lấy từ cột timer_seconds trong bảng recipe_steps.
         timerSeconds     = step.timer_seconds;
         remainingSeconds = timerSeconds;
         resetTimerDisplay();
@@ -341,6 +385,7 @@ public class CookingModeActivity extends AppCompatActivity {
             }
 
             // Sử dụng cơ chế Clipping Configuration để cắt nhỏ video, chỉ lặp lại phát phân đoạn của bước hiện tại
+            // Dùng ClippingConfiguration để chỉ phát lặp lại đoạn video ứng với bước hiện tại.
             MediaItem.ClippingConfiguration clippingConfig = new MediaItem.ClippingConfiguration.Builder()
                 .setStartPositionMs(startMs)
                 .setEndPositionMs(endMs > 0 ? endMs : C.TIME_END_OF_SOURCE)
@@ -357,6 +402,10 @@ public class CookingModeActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Bật/tắt chế độ toàn màn hình cho video.
+     * Khi toàn màn hình, các thẻ hướng dẫn và timer được ẩn để người dùng tập trung vào video.
+     */
     private void toggleFullscreen() {
         View header = findViewById(R.id.header);
         View instructionsCard = (View) findViewById(R.id.tv_step_header).getParent().getParent(); // CardView wrapper
@@ -411,6 +460,10 @@ public class CookingModeActivity extends AppCompatActivity {
 
 
     // ─────────────────────────────────────────────────────────────────────
+    /**
+     * Xử lý nút bắt đầu/dừng bộ hẹn giờ.
+     * Nếu bước hiện tại không có timer_seconds thì không cho chạy timer.
+     */
     private void toggleTimer() {
         if (timerSeconds <= 0) {
             Toast.makeText(this, "Bước này không cần hẹn giờ", Toast.LENGTH_SHORT).show();
@@ -419,6 +472,10 @@ public class CookingModeActivity extends AppCompatActivity {
         if (!timerRunning) startTimer(); else pauseTimer();
     }
 
+    /**
+     * Bắt đầu đếm ngược bằng CountDownTimer của Android.
+     * Mỗi giây cập nhật lại TextView, khi hết giờ hiển thị hộp thoại báo hoàn thành bước.
+     */
     private void startTimer() {
         timerRunning = true;
         if (tvTimerAction != null) tvTimerAction.setText("Dừng");
@@ -436,6 +493,7 @@ public class CookingModeActivity extends AppCompatActivity {
                 if (tvTimerAction != null) tvTimerAction.setText("Bắt đầu");
                 if (btnTimerToggle != null)
                     btnTimerToggle.setBackgroundColor(Color.parseColor("#4CAF50"));
+                // Thông báo trực tiếp trên màn hình để người nấu biết bước hiện tại đã hết giờ.
                 new AlertDialog.Builder(CookingModeActivity.this)
                     .setTitle("⏰ Hết giờ!")
                     .setMessage("Bước " + (currentIndex + 1) + " đã hoàn thành!")
@@ -444,6 +502,9 @@ public class CookingModeActivity extends AppCompatActivity {
         }.start();
     }
 
+    /**
+     * Tạm dừng timer và giữ lại remainingSeconds để người dùng có thể tiếp tục sau.
+     */
     private void pauseTimer() {
         timerRunning = false;
         cancelTimer();
@@ -452,17 +513,26 @@ public class CookingModeActivity extends AppCompatActivity {
             btnTimerToggle.setBackgroundColor(Color.parseColor("#CC0000"));
     }
 
+    /**
+     * Đưa timer về thời lượng ban đầu của bước hiện tại.
+     */
     private void resetTimer() {
         cancelTimer();
         remainingSeconds = timerSeconds;
         resetTimerDisplay();
     }
 
+    /**
+     * Hủy CountDownTimer đang chạy để tránh rò rỉ callback khi rời màn hình hoặc đổi bước.
+     */
     private void cancelTimer() {
         timerRunning = false;
         if (activeTimer != null) { activeTimer.cancel(); activeTimer = null; }
     }
 
+    /**
+     * Khôi phục giao diện timer về trạng thái chưa chạy.
+     */
     private void resetTimerDisplay() {
         updateTimerDisplay(timerSeconds);
         if (tvTimerAction != null) tvTimerAction.setText("Bắt đầu");
@@ -471,6 +541,9 @@ public class CookingModeActivity extends AppCompatActivity {
         if (tvTimer != null) tvTimer.setTextColor(Color.BLACK);
     }
 
+    /**
+     * Định dạng số giây còn lại thành mm:ss hoặc hh:mm:ss và đưa lên giao diện.
+     */
     private void updateTimerDisplay(int seconds) {
         if (tvTimer == null) return;
         int h = seconds / 3600, m = (seconds % 3600) / 60, s = seconds % 60;

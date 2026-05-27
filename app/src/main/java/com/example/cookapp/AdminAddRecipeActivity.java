@@ -49,6 +49,13 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
+/**
+ * Màn hình Admin thêm công thức mới.
+ *
+ * Activity này cho phép quản trị viên nhập thông tin công thức, chọn ảnh/video,
+ * thêm nguyên liệu, thêm các bước nấu kèm timer_seconds và video_start_time,
+ * sau đó gửi dữ liệu lên API admin bằng multipart/form-data.
+ */
 public class AdminAddRecipeActivity extends AppCompatActivity {
 
     private ApiService apiService;
@@ -151,6 +158,10 @@ public class AdminAddRecipeActivity extends AppCompatActivity {
         spinnerDifficulty.setAdapter(diffAdapter);
     }
 
+    /**
+     * Gọi API GET /api/admin/recipe-metadata để lấy danh mục, chế độ ăn và nguyên liệu.
+     * Dữ liệu này dùng để dựng checkbox và gợi ý AutoComplete khi admin nhập công thức.
+     */
     private void loadMetadata() {
         showProgress(true);
         apiService.getRecipeMetadata().enqueue(new Callback<RecipeMetadataResponse>() {
@@ -180,6 +191,10 @@ public class AdminAddRecipeActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Tạo danh sách checkbox động cho category hoặc diet type.
+     * Mỗi checkbox lưu id ở tag để khi submit có thể gửi đúng khóa ngoại về backend.
+     */
     private void populateCheckboxes(List<RecipeMetadataResponse.MetadataItem> items, LinearLayout container, List<CheckBox> trackers) {
         if (items == null) return;
         for (RecipeMetadataResponse.MetadataItem item : items) {
@@ -192,6 +207,10 @@ public class AdminAddRecipeActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Thêm một dòng nhập nguyên liệu.
+     * Dòng này gồm tên nguyên liệu có AutoComplete, số lượng, đơn vị và nút xóa.
+     */
     private void addIngredientRow() {
         LinearLayout row = new LinearLayout(this);
         row.setOrientation(LinearLayout.HORIZONTAL);
@@ -246,6 +265,11 @@ public class AdminAddRecipeActivity extends AppCompatActivity {
         ingredientRows.add(row);
     }
 
+    /**
+     * Thêm một dòng nhập bước nấu.
+     * Mỗi bước gồm tiêu đề ngắn, hướng dẫn chi tiết, thời lượng hẹn giờ theo phút
+     * và mốc giây video để Cooking Mode tua đúng đoạn minh họa.
+     */
     private void addStepRow() {
         LinearLayout row = new LinearLayout(this);
         row.setOrientation(LinearLayout.VERTICAL);
@@ -355,6 +379,12 @@ public class AdminAddRecipeActivity extends AppCompatActivity {
         try { return Float.parseFloat(val); } catch (Exception e) { return 0f; }
     }
 
+    /**
+     * Thu thập toàn bộ dữ liệu trên form và gửi lên API POST /api/admin/recipes.
+     *
+     * Phần JSON chứa thông tin công thức, dinh dưỡng, danh mục, nguyên liệu và bước nấu.
+     * Ảnh/video được chuyển thành MultipartBody.Part để backend lưu file và tạo URL.
+     */
     private void submitRecipe() {
         String title = etTitle.getText().toString().trim();
         if (title.isEmpty()) {
@@ -370,7 +400,7 @@ public class AdminAddRecipeActivity extends AppCompatActivity {
         dto.servings = parseIntSafe(etServings);
         dto.calories = parseIntSafe(etCal);
 
-        // Nutrition
+        // Nhóm thông tin dinh dưỡng sẽ được backend lưu vào bảng nutrition_facts.
         dto.nutritionFacts = new AdminRecipeCreateDto.NutritionFactsDto();
         dto.nutritionFacts.calories = dto.calories;
         dto.nutritionFacts.protein = parseIntSafe(etProtein);
@@ -379,7 +409,7 @@ public class AdminAddRecipeActivity extends AppCompatActivity {
         dto.nutritionFacts.fiber = parseFloatSafe(etFiber);
         dto.nutritionFacts.sugar = parseFloatSafe(etSugar);
         
-        // Mappings
+        // Danh mục và chế độ ăn được gửi dưới dạng danh sách id để tạo bản ghi liên kết.
         dto.categoryIds = new ArrayList<>();
         for (CheckBox cb : categoryCheckboxes) {
             if (cb.isChecked()) dto.categoryIds.add((Integer) cb.getTag());
@@ -390,7 +420,7 @@ public class AdminAddRecipeActivity extends AppCompatActivity {
             if (cb.isChecked()) dto.dietTypeIds.add((Integer) cb.getTag());
         }
 
-        // Steps
+        // Mỗi bước nấu được gửi kèm timerSeconds và videoStartTime để phục vụ Cooking Mode.
         dto.steps = new ArrayList<>();
         for (View row : stepRows) {
             if (row instanceof LinearLayout) {
@@ -417,7 +447,7 @@ public class AdminAddRecipeActivity extends AppCompatActivity {
             }
         }
 
-        // Ingredients
+        // Nguyên liệu có thể lấy theo id có sẵn hoặc theo tên mới để backend tự tạo.
         dto.ingredients = new ArrayList<>();
         for (View row : ingredientRows) {
             if (row instanceof LinearLayout) {
@@ -458,6 +488,7 @@ public class AdminAddRecipeActivity extends AppCompatActivity {
                 String jsonBody = new Gson().toJson(dto);
                 RequestBody dataBody = RequestBody.create(MediaType.parse("application/json"), jsonBody);
                 
+                // Chuyển ảnh thành multipart part tên "image" cho multer ở backend xử lý.
                 MultipartBody.Part imagePart = null;
                 if (imageUri != null) {
                     File file = getFileFromUri(imageUri, "img");
@@ -467,6 +498,7 @@ public class AdminAddRecipeActivity extends AppCompatActivity {
                     }
                 }
 
+                // Chuyển video thành multipart part tên "video" để backend lưu vào public/videos.
                 MultipartBody.Part videoPart = null;
                 if (videoUri != null) {
                     File file = getFileFromUri(videoUri, "vid");
@@ -480,6 +512,7 @@ public class AdminAddRecipeActivity extends AppCompatActivity {
                 MultipartBody.Part finalVideoPart = videoPart;
                 
                 runOnUiThread(() -> {
+                    // Gọi API admin tạo công thức mới; RetrofitClient đã gắn token admin vào header.
                     apiService.createRecipe(dataBody, finalImagePart, finalVideoPart).enqueue(new Callback<GenericResponse>() {
                         @Override
                         public void onResponse(Call<GenericResponse> call, Response<GenericResponse> response) {
@@ -508,6 +541,10 @@ public class AdminAddRecipeActivity extends AppCompatActivity {
         }).start();
     }
 
+    /**
+     * Sao chép file người dùng chọn từ Uri vào file tạm trong cache của app.
+     * Retrofit cần File thật để tạo multipart upload ổn định trên nhiều phiên bản Android.
+     */
     private File getFileFromUri(Uri uri, String prefix) {
         try {
             InputStream inputStream = getContentResolver().openInputStream(uri);
