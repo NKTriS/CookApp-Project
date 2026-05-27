@@ -19,6 +19,13 @@ let cachedPromptTime = 0;
 let cachedPromptUserId = null;
 const PROMPT_CACHE_TTL = 5 * 60 * 1000; // 5 phút
 
+/**
+ * Tạo system prompt cho Chef AI từ dữ liệu thật trong CSDL.
+ *
+ * Hàm lấy danh sách công thức, nguyên liệu, dinh dưỡng và món yêu thích của user
+ * để AI ưu tiên tư vấn dựa trên nội dung CookApp. Prompt được cache 5 phút theo
+ * userId nhằm giảm truy vấn CSDL khi người dùng gửi nhiều tin nhắn liên tiếp.
+ */
 async function buildSystemPrompt(userId) {
     const now = Date.now();
     // Trả về prompt trong bộ nhớ đệm nếu cùng user và trong thời hạn TTL
@@ -73,14 +80,27 @@ QUY TẮC BẮT BUỘC (PHẢI TUÂN THỦ):
     return cachedPrompt;
 }
 
+/**
+ * Gọi API ngoài Groq Chat Completions để sinh câu trả lời cho Chef AI.
+ *
+ * messages gồm system prompt, lịch sử hội thoại và tin nhắn mới nhất của người dùng.
+ * Model sử dụng là llama-3.3-70b-versatile; kết quả trả về được lấy từ choices[0].
+ */
 async function chatWithGroq(systemPrompt, message, history) {
     const msgs = [{ role: 'system', content: systemPrompt }];
     (history || []).forEach(h => msgs.push({ role: h.role === 'user' ? 'user' : 'assistant', content: h.content }));
     msgs.push({ role: 'user', content: message });
+    // API ngoài: Groq SDK gửi request tới dịch vụ LLM để tạo phản hồi tiếng Việt về nấu ăn.
     const c = await groq.chat.completions.create({ messages: msgs, model: 'llama-3.3-70b-versatile', temperature: 0.7, max_tokens: 1024 });
     return c.choices[0]?.message?.content || 'Xin lỗi, tôi không hiểu.';
 }
 
+/**
+ * POST /api/chat
+ *
+ * Endpoint nội bộ cho app Android gửi tin nhắn Chef AI. Route yêu cầu đăng nhập,
+ * kiểm tra nội dung message, dựng prompt từ CSDL, gọi Groq rồi trả về JSON { reply }.
+ */
 router.post('/chat', authenticateToken, async (req, res) => {
     try {
         const { message, history } = req.body;

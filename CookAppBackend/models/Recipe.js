@@ -1,6 +1,8 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 
+// Bảng recipes lưu thông tin chính của công thức, bao gồm ảnh, video hướng dẫn
+// và các thuộc tính dùng để lọc/tìm kiếm trong app Android.
 const Recipe = sequelize.define('Recipe', {
     id: {
         type: DataTypes.INTEGER,
@@ -35,9 +37,11 @@ const Recipe = sequelize.define('Recipe', {
     diet_type_id: {
         type: DataTypes.INTEGER
     },
+    // URL video nấu ăn; Android dùng để mở VideoPlayerActivity và CookingModeActivity.
     video_url: {
         type: DataTypes.STRING
     },
+    // Ảnh thumbnail của video nếu backend/admin có tạo riêng.
     video_thumbnail_url: {
         type: DataTypes.STRING
     }

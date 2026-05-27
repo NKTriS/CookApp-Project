@@ -1,6 +1,8 @@
 const { DataTypes } = require('sequelize');
 const sequelize = require('../config/database');
 
+// Bảng orders lưu đơn mua nguyên liệu/sản phẩm trong app.
+// Admin Panel dùng bảng này để theo dõi đơn và cập nhật trạng thái giao hàng.
 const Order = sequelize.define('Order', {
     id: {
         type: DataTypes.INTEGER,
@@ -34,6 +36,7 @@ const Order = sequelize.define('Order', {
     itemsSummary: {
         type: DataTypes.TEXT
     },
+    // Trạng thái nghiệp vụ của đơn hàng, được cập nhật từ màn hình Admin Orders.
     status: {
         type: DataTypes.STRING,
         defaultValue: 'Chờ xác nhận'   // Chờ xác nhận → Đang giao → Hoàn thành / Đã hủy

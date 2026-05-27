@@ -260,6 +260,10 @@ router.get('/recipes/category/:categoryId', async (req, res) => {
 });
 
 // GET /api/recipes/:id — chi tiết 1 công thức
+/**
+ * GET /api/recipes/:id
+ * Lấy chi tiết công thức, bao gồm video_url để app mở Video nấu ăn/Cooking Mode.
+ */
 router.get('/recipes/:id', async (req, res) => {
     try {
         const recipe = await Recipe.findByPk(req.params.id, { include: recipeIncludes });
@@ -283,6 +287,11 @@ router.post('/recipes', authenticateToken, async (req, res) => {
 // ─────────────────────────────────────────────
 // RECIPE STEPS
 // ─────────────────────────────────────────────
+/**
+ * GET /api/recipes/:id/steps
+ * Trả về danh sách bước nấu cho Cooking Mode. Các cột timer_seconds và
+ * video_start_time được Android dùng để hiển thị hẹn giờ và tua video đúng đoạn.
+ */
 router.get('/recipes/:id/steps', async (req, res) => {
     try {
         const steps = await RecipeStep.findAll({

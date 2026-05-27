@@ -18,6 +18,7 @@ const videoDest = path.join(__dirname, '..', 'public', 'videos');
 fs.mkdirSync(imageDest, { recursive: true });
 fs.mkdirSync(videoDest, { recursive: true });
 
+// Cấu hình multer để lưu ảnh đại diện công thức và video hướng dẫn vào thư mục public.
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
         if (file.fieldname === 'image') cb(null, imageDest);
@@ -38,11 +39,17 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 // Tất cả route trong file này đều yêu cầu admin auth
+// Tất cả route bên dưới đều yêu cầu token có quyền admin.
 router.use(adminAuth);
 
 // ─────────────────────────────────────────────
 // THỐNG KÊ HỆ THỐNG (DASHBOARD)
 // ─────────────────────────────────────────────
+/**
+ * GET /api/admin/stats
+ * Trả về số liệu tổng quan cho dashboard: user, công thức, đơn hàng, bài viết,
+ * đánh giá, doanh thu và đơn gần đây.
+ */
 router.get('/stats', async (req, res) => {
     try {
         const [users, recipes, orders, posts, reviews, ingredients] = await Promise.all([
@@ -94,6 +101,10 @@ router.get('/stats', async (req, res) => {
 // ─────────────────────────────────────────────
 // QUẢN LÝ TÀI KHOẢN NGƯỜI DÙNG (USERS)
 // ─────────────────────────────────────────────
+/**
+ * GET /api/admin/users
+ * Lấy danh sách người dùng có phân trang và tìm kiếm theo email/họ tên.
+ */
 router.get('/users', async (req, res) => {
     try {
         const page = parseInt(req.query.page) || 1;
@@ -120,6 +131,10 @@ router.get('/users', async (req, res) => {
     } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
+/**
+ * PATCH /api/admin/users/:id/role
+ * Cập nhật vai trò user/admin cho một tài khoản.
+ */
 router.patch('/users/:id/role', async (req, res) => {
     try {
         const { role } = req.body;
@@ -134,6 +149,10 @@ router.patch('/users/:id/role', async (req, res) => {
     } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
+/**
+ * DELETE /api/admin/users/:id
+ * Xóa tài khoản người dùng khỏi hệ thống.
+ */
 router.delete('/users/:id', async (req, res) => {
     try {
         const user = await User.findByPk(req.params.id);
@@ -147,6 +166,10 @@ router.delete('/users/:id', async (req, res) => {
 // ─────────────────────────────────────────────
 // QUẢN LÝ ĐƠN HÀNG SIÊU THỊ (ORDERS)
 // ─────────────────────────────────────────────
+/**
+ * GET /api/admin/orders
+ * Lấy danh sách đơn hàng, hỗ trợ lọc theo trạng thái để Admin Panel hiển thị chip.
+ */
 router.get('/orders', async (req, res) => {
     try {
         const page = parseInt(req.query.page) || 1;
@@ -168,6 +191,10 @@ router.get('/orders', async (req, res) => {
     } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
+/**
+ * PATCH /api/admin/orders/:id/status
+ * Cập nhật trạng thái đơn hàng và kiểm tra trạng thái đầu vào có hợp lệ không.
+ */
 router.patch('/orders/:id/status', async (req, res) => {
     try {
         const { status } = req.body;
@@ -192,6 +219,10 @@ router.patch('/orders/:id/status', async (req, res) => {
 // ─────────────────────────────────────────────
 // QUẢN LÝ CÔNG THỨC NẤU ĂN (RECIPES)
 // ─────────────────────────────────────────────
+/**
+ * GET /api/admin/recipes
+ * Lấy danh sách công thức cho admin quản lý, có tìm kiếm theo tên công thức.
+ */
 router.get('/recipes', async (req, res) => {
     try {
         const page = parseInt(req.query.page) || 1;
@@ -290,6 +321,10 @@ router.delete('/reviews/:id', async (req, res) => {
 // ─────────────────────────────────────────────
 const { DietType, RecipeCategory, RecipeDietType, RecipeIngredient } = require('../models');
 
+/**
+ * GET /api/admin/recipe-metadata
+ * Trả về category, diet type và ingredient để app Android dựng form thêm công thức.
+ */
 router.get('/recipe-metadata', async (req, res) => {
     try {
         const [categories, dietTypes, ingredients] = await Promise.all([
@@ -311,6 +346,10 @@ router.get('/recipes/:id/steps', async (req, res) => {
     } catch (e) { res.status(500).json({ error: e.message }); }
 });
 
+/**
+ * PUT /api/admin/recipes/:id/steps
+ * Cập nhật lại danh sách bước nấu, gồm timer_seconds và video_start_time.
+ */
 router.put('/recipes/:id/steps', async (req, res) => {
     try {
         const { steps } = req.body;
@@ -332,6 +371,12 @@ router.post('/recipes/:id/auto-sync-video', async (req, res) => {
     res.status(400).json({ error: "Tính năng tự động đồng bộ video qua Gemini đã bị gỡ bỏ." });
 });
 
+/**
+ * POST /api/admin/recipes
+ * Tạo công thức mới bằng multipart/form-data. Phần data là JSON; image và video
+ * là file upload. Route dùng transaction để tạo recipe, dinh dưỡng, category,
+ * diet type, các bước nấu và nguyên liệu một cách nhất quán.
+ */
 router.post('/recipes', upload.fields([{name: 'image', maxCount: 1}, {name: 'video', maxCount: 1}]), async (req, res) => {
     // Transaction wrapper for atomic creation
     const t = await sequelize.transaction();
